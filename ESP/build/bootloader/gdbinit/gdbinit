@@ -1,2 +1,2 @@
-source /home/long/DO_AN_1/build/bootloader/gdbinit/symbols
-source /home/long/DO_AN_1/build/bootloader/gdbinit/connect
+source /home/quockiet/myDoc/MonHoc/Do_An1/ESP/build/bootloader/gdbinit/symbols
+source /home/quockiet/myDoc/MonHoc/Do_An1/ESP/build/bootloader/gdbinit/connect

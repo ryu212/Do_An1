@@ -1,4 +1,4 @@
-# Install script for directory: /home/long/esp/esp-idf/components/mbedtls
+# Install script for directory: /home/quockiet/esp/esp-idf/components/mbedtls
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -34,11 +34,11 @@ endif()
 
 # Set default install directory permissions.
 if(NOT DEFINED CMAKE_OBJDUMP)
-  set(CMAKE_OBJDUMP "/home/long/.espressif/tools/xtensa-esp-elf/esp-14.2.0_20241119/xtensa-esp-elf/bin/xtensa-esp32-elf-objdump")
+  set(CMAKE_OBJDUMP "/home/quockiet/.espressif/tools/xtensa-esp-elf/esp-15.1.0_20250607/xtensa-esp-elf/bin/xtensa-esp32-elf-objdump")
 endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/long/DO_AN_1/build/esp-idf/mbedtls/mbedtls/cmake_install.cmake")
+  include("/home/quockiet/myDoc/MonHoc/Do_An1/ESP/build/esp-idf/mbedtls/mbedtls/cmake_install.cmake")
 endif()
 

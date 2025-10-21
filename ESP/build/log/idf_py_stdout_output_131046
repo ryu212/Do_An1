@@ -1,0 +1,128 @@
+Command: /home/quockiet/.espressif/python_env/idf6.0_py3.13_env/bin/python /home/quockiet/esp/esp-idf/tools/idf_monitor.py -p /dev/ttyUSB0 -b 115200 --toolchain-prefix xtensa-esp32-elf- --target esp32 --revision 0 /home/quockiet/myDoc/MonHoc/Do_An1/ESP/build/..elf /home/quockiet/myDoc/MonHoc/Do_An1/ESP/build/bootloader/bootloader.elf -m '/home/quockiet/.espressif/python_env/idf6.0_py3.13_env/bin/python' '/home/quockiet/esp/esp-idf/tools/idf.py'
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:6372
+load:0x40078000,len:15920
+ho 0 tail 12 room 4
+load:0x40080400,len:3880
+entry 0x40080638
+[0;32mI (29) boot: ESP-IDF v6.0-dev-1489-g4e036983a7-dirty 2nd stage bootloader[0m
+[0;32mI (29) boot: compile time Oct 21 2025 20:16:40[0m
+[0;32mI (29) boot: Multicore bootloader[0m
+[0;32mI (33) boot: chip revision: v3.1[0m
+[0;32mI (36) boot.esp32: SPI Speed      : 40MHz[0m
+[0;32mI (39) boot.esp32: SPI Mode       : DIO[0m
+[0;32mI (43) boot.esp32: SPI Flash Size : 2MB[0m
+[0;32mI (46) boot: Enabling RNG early entropy source...[0m
+[0;32mI (51) boot: Partition Table:[0m
+[0;32mI (53) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (60) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (66) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (73) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (79) boot: End of partition table[0m
+[0;32mI (83) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=1f2e4h (127716) map[0m
+[0;32mI (135) esp_image: segment 1: paddr=0002f30c vaddr=3ffb0000 size=00d0ch (  3340) load[0m
+[0;32mI (137) esp_image: segment 2: paddr=00030020 vaddr=400d0020 size=a3694h (669332) map[0m
+[0;32mI (376) esp_image: segment 3: paddr=000d36bc vaddr=3ffb0d0c size=03428h ( 13352) load[0m
+[0;32mI (381) esp_image: segment 4: paddr=000d6aec vaddr=40080000 size=187e4h (100324) load[0m
+[0;32mI (422) esp_image: segment 5: paddr=000ef2d8 vaddr=50000000 size=00024h (    36) load[0m
+[0;32mI (435) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (435) boot: Disabling RNG early entropy source...[0m
+[0;32mI (445) cpu_start: Multicore app[0m
+[0;32mI (453) cpu_start: GPIO 3 and 1 are used as console UART I/O pins[0m
+[0;32mI (454) cpu_start: Pro cpu start user code[0m
+[0;32mI (454) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (456) app_init: Application information:[0m
+[0;32mI (459) app_init: Project name:     .[0m
+[0;32mI (463) app_init: App version:      2bca1ce-dirty[0m
+[0;32mI (467) app_init: Compile time:     Oct 21 2025 20:16:32[0m
+[0;32mI (472) app_init: ELF file SHA256:  ca92fc0a3...[0m
+[0;32mI (477) app_init: ESP-IDF:          v6.0-dev-1489-g4e036983a7-dirty[0m
+[0;32mI (482) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (486) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (490) efuse_init: Chip rev:         v3.1[0m
+[0;32mI (494) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (501) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM[0m
+[0;32mI (506) heap_init: At 3FFB9898 len 00026768 (153 KiB): DRAM[0m
+[0;32mI (511) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (516) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (522) heap_init: At 400987E4 len 0000781C (30 KiB): IRAM[0m
+[0;33mW (528) spi_flash: Detected boya flash chip but using generic driver. For optimal functionality, enable `SPI_FLASH_SUPPORT_BOYA_CHIP` in menuconfig[0m
+[0;32mI (540) spi_flash: detected chip: generic[0m
+[0;32mI (544) spi_flash: flash io: dio[0m
+[0;33mW (547) spi_flash: Detected size(4096k) larger than the size in the binary image header(2048k). Using the size in the binary image header.[0m
+[0;32mI (560) main_task: Started on CPU0[0m
+[0;32mI (570) main_task: Calling app_main()[0m
+[0;32mI (590) SPI_SLAVE: Slave ready: frame=512, payload=500[0m
+[0;32mI (590) WIFI: ESP_WIFI_MODE_STA[0m
+[0;32mI (610) wifi:wifi driver task: 3ffc1b30, prio:23, stack:6656, core=0[0m
+[0;32mI (620) wifi:wifi firmware version: 5984c42[0m
+[0;32mI (620) wifi:wifi certification version: v7.0[0m
+[0;32mI (620) wifi:config NVS flash: enabled[0m
+[0;32mI (620) wifi:config nano formatting: disabled[0m
+[0;32mI (620) wifi:Init data frame dynamic rx buffer num: 32[0m
+[0;32mI (630) wifi:Init static rx mgmt buffer num: 5[0m
+[0;32mI (630) wifi:Init management short buffer num: 32[0m
+[0;32mI (640) wifi:Init dynamic tx buffer num: 32[0m
+[0;32mI (640) wifi:Init static rx buffer size: 1600[0m
+[0;32mI (650) wifi:Init static rx buffer num: 10[0m
+[0;32mI (650) wifi:Init dynamic rx buffer num: 32[0m
+[0;32mI (650) wifi_init: rx ba win: 6[0m
+[0;32mI (660) wifi_init: accept mbox: 6[0m
+[0;32mI (660) wifi_init: tcpip mbox: 32[0m
+[0;32mI (660) wifi_init: udp mbox: 6[0m
+[0;32mI (670) wifi_init: tcp mbox: 6[0m
+[0;32mI (670) wifi_init: tcp tx win: 5760[0m
+[0;32mI (670) wifi_init: tcp rx win: 5760[0m
+[0;32mI (670) wifi_init: tcp mss: 1440[0m
+[0;32mI (680) wifi_init: WiFi IRAM OP enabled[0m
+[0;32mI (680) wifi_init: WiFi RX IRAM OP enabled[0m
+[0;32mI (690) phy_init: phy_version 4860,6b7a6e5,Feb  6 2025,14:47:07[0m
+[0;32mI (770) phy_init: Saving new calibration data due to checksum failure or outdated calibration data, mode(0)[0m
+[0;32mI (840) wifi:mode : sta (c0:5d:89:dc:8a:64)[0m
+[0;32mI (840) wifi:enable tsf[0m
+[0;32mI (840) WIFI: wifi_init_sta finished.[0m
+[0;32mI (850) wifi:new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (850) wifi:state: init -> auth (0xb0)[0m
+[0;32mI (920) wifi:state: auth -> assoc (0x0)[0m
+[0;32mI (960) wifi:state: assoc -> run (0x10)[0m
+[0;32mI (1000) wifi:connected with MyHotspot, aid = 1, channel 1, BW20, bssid = 34:cf:f6:9a:61:3b[0m
+[0;32mI (1000) wifi:security: WPA2-PSK, phy: bgn, rssi: -36[0m
+[0;32mI (1010) wifi:pm start, type: 1[0m
+
+[0;32mI (1010) wifi:dp: 1, bi: 102400, li: 3, scale listen interval from 307200 us to 307200 us[0m
+[0;32mI (1050) wifi:dp: 2, bi: 102400, li: 4, scale listen interval from 307200 us to 409600 us[0m
+[0;32mI (1050) wifi:AP's beacon interval = 102400 us, DTIM period = 2[0m
+[0;32mI (2040) esp_netif_handlers: sta ip: 10.42.0.138, mask: 255.255.255.0, gw: 10.42.0.1[0m
+[0;32mI (2040) WIFI: got ip:10.42.0.138[0m
+[0;32mI (2040) WIFI: connected to ap SSID:MyHotspot password:12345678[0m
+[0;32mI (2040) MQTT_CLIENT: Unhandled event id: 7[0m
+[1;31mE (2050) mqtt_client: Client has not connected[0m
+[0;32mI (2070) MQTT_CLIENT: MQTT_EVENT_CONNECTED[0m
+[0;32mI (2070) MQTT_CLIENT: Subscribe qos0, msg_id=38151[0m
+[0;32mI (2080) MQTT_CLIENT: MQTT_EVENT_SUBSCRIBED, msg_id=38151[0m
+[0;32mI (2090) MQTT_CLIENT: MQTT_EVENT_DATA[0m
+TOPIC=/topic/qos0
+DATA=data
+[0;33mW (77210) error: Bad header: 00 00[0m
+fi:enable tsf
+[0;32mI (1130) WIFI: wifi_init_sta finished.[0m
+[0;32mI (1140) wifi:new:<1,0>, old:<1,0>, ap:<255,255>, sta:<1,0>, prof:1, snd_ch_cfg:0x0[0m
+[0;32mI (1140) wifi:state: init -> auth (0xb0)[0m
+[0;32mI (1180) wifi:state: auth -> assoc (0x0)[0m
+[0;32mI (1190) wifi:state: assoc -> run (0x10)[0m
+[0;32mI (1200) wifi:connected with MyHotspot, aid = 1, channel 1, BW20, bssid = 34:cf:f6:9a:61:3b[0m
+[0;32mI (1200) wifi:security: WPA2-PSK, phy: bgn, rssi: -50[0m
+[0;32mI (1210) wifi:pm start, type: 1[0m
+
+[0;32mI (1210) wifi:dp: 1, bi: 102400, li: 3, scale listen interval from 307200 us to 307200 us[0m
+[0;32mI (1280) wifi:dp: 2, bi: 102400, li: 4, scale listen interval from 307200 us to 409600 us[0m
+[0;32mI (1280) wifi:AP's beacon interval = 102400 us, DTIM period = 2[0m
+[0;32mI (2250) esp_netif_handlers: sta ip: 10.42.0.138, mask: 255.255.255.0, gw: 10.42.0.1[0m
+[0;32mI (2250) WIFI: got ip:10.42.0.138[0m
+[0;32mI (2250) WIFI: connected to ap SSID:MyHotspot password:12345678[0m
+[0;32mI (2250)

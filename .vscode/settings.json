@@ -1,3 +1,7 @@
 {
-    "idf.pythonInstallPath": "/home/long/.espressif/python_env/idf5.4_py3.10_env/bin/python"
+    "idf.pythonInstallPath": "/usr/bin/python",
+    "files.associations": {
+        "string_view": "c",
+        "string.h": "c"
+    }
 }

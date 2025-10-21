@@ -1,4 +1,4 @@
 idf_component_register(
-    SRCS "Data.c" "Mqtt.c" "Wifi.c" "main.c"
+    SRCS "SPI.c" "Data.c" "Mqtt.c" "Wifi.c" "main.c" "SPI.c"
     INCLUDE_DIRS "."
 )
