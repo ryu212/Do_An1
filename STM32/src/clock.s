@@ -76,3 +76,4 @@ wait_sysclk_pll:
         BNE     wait_sysclk_pll
 
         BX      LR
+

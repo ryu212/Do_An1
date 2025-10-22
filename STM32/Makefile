@@ -8,7 +8,7 @@ LFLAGS = -nostartfiles -T $(LS)
 BFLAGS = -O binary
 
 TARGET := myprogram
-SRC_DIR = src
+SRC_DIR = STM32/src
 OBJ_DIR = obj
 
 # Tự động lấy tất cả file .c và .s trong Src/
