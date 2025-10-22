@@ -1,0 +1,7 @@
+PA1 for ADC read 
+PA4: NSS (output)
+PA5: SCK AF push-pull
+PA6: MISO input floating
+PA7: MOSI AF push-pull
+ 
+st-flash write myprogram.bin 0x8000000: flash command
