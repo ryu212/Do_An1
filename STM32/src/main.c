@@ -27,10 +27,12 @@
 #define ADC1_SQR1       (*(volatile uint32_t*)(ADC1_BASE + 0x2C))
 #define ADC1_SQR3       (*(volatile uint32_t*)(ADC1_BASE + 0x34))
 #define ADC1_DR         (*(volatile uint32_t*)(ADC1_BASE + 0x4C))
+#define ADC1_SMPR2      (*(volatile uint32_t*)(ADC1_BASE + 0x10))
 #define ADC_CR2_DMA              (1 << 8)
 #define ADC_CR2_EXTTRIG          (1 << 20)
 #define ADC_CR2_EXTSEL_TIM3_TRGO (0b100 << 17)
 #define ADC_CR2_ADON             (1 << 0)
+#define ADC_CR2_CAL              (1 << 2)
 
 /* ===================== TIM3 ===================== */
 #define TIM3_BASE       0x40000400
@@ -52,18 +54,25 @@
 #define DMA1_CNDTR1      (*(volatile uint32_t*)(DMA1_BASE + 0x0C))
 #define DMA1_CPAR1       (*(volatile uint32_t*)(DMA1_BASE + 0x10))
 #define DMA1_CMAR1       (*(volatile uint32_t*)(DMA1_BASE + 0x14))
-
+#define DMA_CCR1_EN      (1 << 0)
+#define DMA_CCR1_TCIE    (1 << 1)
+#define DMA_CCR1_MINC    (1 << 7)
+#define DMA_CCR1_PSIZE_16BIT (0b01 << 10)
+#define DMA_CCR1_MSIZE_16BIT (0b01 << 12)
+#define DMA_CCR1_PL_HIGH     (0b10 << 8)
 /* ===================== SPI1 ===================== */
 #define SPI1_BASE     0x40013000
 #define SPI1_CR1      (*(volatile uint32_t*)(SPI1_BASE + 0x00))
 #define SPI1_CR2      (*(volatile uint32_t*)(SPI1_BASE + 0x04))
 #define SPI1_SR       (*(volatile uint32_t*)(SPI1_BASE + 0x08))
 #define SPI1_DR       (*(volatile uint32_t*)(SPI1_BASE + 0x0C))
-
+/*==========================NVIC==========================*/
+#define NVIC_ISER0    (*(volatile uint32_t*)(0xE000E100))
+#define DMA1_CHANNEL1_IRQn 11
 /* ===================== APP CONFIG ===================== */
 #define SIZE 250
 uint16_t ecg_buffer[SIZE];
-
+volatile uint8_t dma_complete = 0;
 /* ===================== FUNCTION PROTOTYPES ===================== */
 void setupRCC(void);
 void setupTIM3(void);
@@ -82,20 +91,34 @@ int main(void)
     setupDMA();
     setupSPI();
 
-    while (1)
-    {
-        if (DMA1_CNDTR1 == 0)
-        {
-            DMA1_CCR1 &= ~1;  // Disable DMA
+    NVIC_ISER0 |= (1 << DMA1_CHANNEL1_IRQn);
+    while (1) {
+        if (dma_complete) {
+            // Disable DMA and ADC
+            DMA1_CCR1 &= ~DMA_CCR1_EN;
+            ADC1_CR2 &= ~ADC_CR2_ADON;
 
-            for (int i = 0; i < SIZE; i++)
-            {
+            // NSS low
+            GPIOA_BSRR = (1 << (4 + 16)); // Set PA4 low
+
+            // Send buffer via SPI
+            for (volatile int i = 0; i < SIZE; i++) {
                 SPI1_DR = ecg_buffer[i];
-                while (!(SPI1_SR & (1 << 1))); // Wait TXE = 1
+                while (!(SPI1_SR & (1 << 1))); // Wait TXE
+                while (SPI1_SR & (1 << 7));    // Wait BSY
             }
 
-            DMA1_CNDTR1 = SIZE;  // Reload count
-            DMA1_CCR1 |= 1;      // Enable DMA again
+            // NSS high
+            GPIOA_BSRR = (1 << 4); // Set PA4 high
+
+            // Reset flag
+            dma_complete = 0;
+
+            // Restart ADC and DMA
+            ADC1_CR2 |= ADC_CR2_ADON;
+            for (volatile int i = 0; i < 10; i++); // Brief delay
+            DMA1_CNDTR1 = SIZE;
+            DMA1_CCR1 |= DMA_CCR1_EN;
         }
     }
 }
@@ -137,26 +160,37 @@ void setupADC1CH1(void)
     ADC1_CR1 = 0;
     ADC1_SQR1 = 0;
     ADC1_SQR3 = 1;
+    ADC1_SMPR2 &= ~(7 << 3);
+
+    ADC1_CR2 |= ADC_CR2_CAL;
+    while (ADC1_CR2 & ADC_CR2_CAL);
 
     ADC1_CR2 = ADC_CR2_DMA | ADC_CR2_EXTTRIG | ADC_CR2_EXTSEL_TIM3_TRGO;
     ADC1_CR2 |= ADC_CR2_ADON; // Power on ADC
+    for (volatile int i = 0; i < 10; i++);
 }
 
 void setupDMA(void)
 {
     DMA1_CCR1 &= ~1;
 
-    DMA1_CPAR1 = (uint32_t)&ADC1_DR;
+    DMA1_CPAR1 = ADC1_BASE + 0x4C;
     DMA1_CMAR1 = (uint32_t)ecg_buffer;
     DMA1_CNDTR1 = SIZE;
 
-    // Cấu hình: 16-bit, circular, MINC, high priority
-    DMA1_CCR1 = (0b10 << 12) | (0b01 << 10) | (0b01 << 8) | (1 << 7) | (1 << 5);
-    DMA1_CCR1 |= 1;
+    // Cấu hình: 16-bit, MINC, high priority
+    DMA1_CCR1 = DMA_CCR1_MINC | DMA_CCR1_PSIZE_16BIT | DMA_CCR1_MSIZE_16BIT | DMA_CCR1_PL_HIGH | DMA_CCR1_TCIE;
+    DMA1_CCR1 |= DMA_CCR1_EN;
 }
 
 void setupSPI(void)
 {
     SPI1_CR1 = (1 << 9) | (1 << 8) | (1 << 2) | (3 << 3) | (1 << 11); // Master, SSM+SSI, f/16
     SPI1_CR1 |= (1 << 6);  // Enable SPI
+}
+void DMA1_Channel1_IRQHandler(void) {
+    if (DMA1_ISR & (1 << 1)) { // TCIF1
+        DMA1_IFCR |= (1 << 1); // Clear TCIF1
+        dma_complete = 1;
+    }
 }

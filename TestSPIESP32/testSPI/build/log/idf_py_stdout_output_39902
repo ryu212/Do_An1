@@ -1,0 +1,306 @@
+ets Jul 29 2019 12:21:46
+
+rst:0x1 (POWERON_RESET),boot:0x13 (SPI_FAST_FLASH_BOOT)
+configsip: 0, SPIWP:0xee
+clk_drv:0x00,q_drv:0x00,d_drv:0x00,cs0_drv:0x00,hd_drv:0x00,wp_drv:0x00
+mode:DIO, clock div:2
+load:0x3fff0030,len:6276
+load:0x40078000,len:15748
+load:0x40080400,len:4
+ho 8 tail 4 room 4
+load:0x40080404,len:3860
+entry 0x4008063c
+[0;32mI (31) boot: ESP-IDF v5.4.1-dirty 2nd stage bootloader[0m
+[0;32mI (31) boot: compile time Aug  6 2025 21:59:18[0m
+[0;32mI (31) boot: Multicore bootloader[0m
+[0;32mI (33) boot: chip revision: v3.1[0m
+[0;32mI (36) boot.esp32: SPI Speed      : 40MHz[0m
+[0;32mI (40) boot.esp32: SPI Mode       : DIO[0m
+[0;32mI (43) boot.esp32: SPI Flash Size : 4MB[0m
+[0;32mI (47) boot: Enabling RNG early entropy source...[0m
+[0;32mI (51) boot: Partition Table:[0m
+[0;32mI (54) boot: ## Label            Usage          Type ST Offset   Length[0m
+[0;32mI (60) boot:  0 nvs              WiFi data        01 02 00009000 00006000[0m
+[0;32mI (67) boot:  1 phy_init         RF data          01 01 0000f000 00001000[0m
+[0;32mI (73) boot:  2 factory          factory app      00 00 00010000 00100000[0m
+[0;32mI (80) boot: End of partition table[0m
+[0;32mI (83) esp_image: segment 0: paddr=00010020 vaddr=3f400020 size=0b034h ( 45108) map[0m
+[0;32mI (106) esp_image: segment 1: paddr=0001b05c vaddr=3ff80000 size=0001ch (    28) load[0m
+[0;32mI (106) esp_image: segment 2: paddr=0001b080 vaddr=3ffb0000 size=02438h (  9272) load[0m
+[0;32mI (113) esp_image: segment 3: paddr=0001d4c0 vaddr=40080000 size=02b58h ( 11096) load[0m
+[0;32mI (122) esp_image: segment 4: paddr=00020020 vaddr=400d0020 size=15c7ch ( 89212) map[0m
+[0;32mI (155) esp_image: segment 5: paddr=00035ca4 vaddr=40082b58 size=0ba34h ( 47668) load[0m
+[0;32mI (181) boot: Loaded app from partition at offset 0x10000[0m
+[0;32mI (181) boot: Disabling RNG early entropy source...[0m
+[0;32mI (191) cpu_start: Multicore app[0m
+[0;32mI (200) cpu_start: Pro cpu start user code[0m
+[0;32mI (200) cpu_start: cpu freq: 160000000 Hz[0m
+[0;32mI (200) app_init: Application information:[0m
+[0;32mI (200) app_init: Project name:     testSPI[0m
+[0;32mI (204) app_init: App version:      f8ca136[0m
+[0;32mI (208) app_init: Compile time:     Aug  6 2025 21:59:13[0m
+[0;32mI (213) app_init: ELF file SHA256:  e8ee3f110...[0m
+[0;32mI (217) app_init: ESP-IDF:          v5.4.1-dirty[0m
+[0;32mI (221) efuse_init: Min chip rev:     v0.0[0m
+[0;32mI (225) efuse_init: Max chip rev:     v3.99 [0m
+[0;32mI (229) efuse_init: Chip rev:         v3.1[0m
+[0;32mI (233) heap_init: Initializing. RAM available for dynamic allocation:[0m
+[0;32mI (239) heap_init: At 3FFAE6E0 len 00001920 (6 KiB): DRAM[0m
+[0;32mI (244) heap_init: At 3FFB2D28 len 0002D2D8 (180 KiB): DRAM[0m
+[0;32mI (250) heap_init: At 3FFE0440 len 00003AE0 (14 KiB): D/IRAM[0m
+[0;32mI (255) heap_init: At 3FFE4350 len 0001BCB0 (111 KiB): D/IRAM[0m
+[0;32mI (261) heap_init: At 4008E58C len 00011A74 (70 KiB): IRAM[0m
+[0;32mI (267) spi_flash: detected chip: generic[0m
+[0;32mI (269) spi_flash: flash io: dio[0m
+[0;32mI (273) main_task: Started on CPU0[0m
+[0;32mI (283) main_task: Calling app_main()[0m
+[0;32mI (283) SPI: SPI bus initialized[0m
+[0;32mI (283) SPI: SPI device added[0m
+[0;32mI (283) SPI: Received:[0m
+0x55 
+[0;32mI (783) SPI: Received:[0m
+0x54 
+[0;32mI (1283) SPI: Received:[0m
+0xAA 
+[0;32mI (1783) SPI: Received:[0m
+0xA9 
+[0;32mI (2283) SPI: Received:[0m
+0x50 
+[0;32mI (2783) SPI: Received:[0m
+0x20 
+[0;32mI (3283) SPI: Received:[0m
+0x20 
+[0;32mI (3783) SPI: Received:[0m
+0x20 
+[0;32mI (4283) SPI: Received:[0m
+0x26 
+[0;32mI (4783) SPI: Received:[0m
+0x16 
+[0;32mI (5283) SPI: Received:[0m
+0x16 
+[0;32mI (5783) SPI: Received:[0m
+0x16 
+[0;32mI (6283) SPI: Received:[0m
+0x12 
+[0;32mI (6783) SPI: Received:[0m
+0x14 
+[0;32mI (7283) SPI: Received:[0m
+0x34 
+[0;32mI (7783) SPI: Received:[0m
+0x34 
+[0;32mI (8283) SPI: Received:[0m
+0x3E 
+[0;32mI (8783) SPI: Received:[0m
+0x1E 
+[0;32mI (9283) SPI: Received:[0m
+0x1E 
+[0;32mI (9783) SPI: Received:[0m
+0x1E 
+[0;32mI (10283) SPI: Received:[0m
+0x12 
+[0;32mI (10783) SPI: Received:[0m
+0x22 
+[0;32mI (11283) SPI: Received:[0m
+0x22 
+[0;32mI (11783) SPI: Received:[0m
+0x22 
+[0;32mI (12283) SPI: Received:[0m
+0x24 
+[0;32mI (12783) SPI: Received:[0m
+0x4C 
+[0;32mI (13283) SPI: Received:[0m
+0x4C 
+[0;32mI (13783) SPI: Received:[0m
+0x4C 
+[0;32mI (14283) SPI: Received:[0m
+0x4A 
+[0;32mI (14783) SPI: Received:[0m
+0x2A 
+[0;32mI (15283) SPI: Received:[0m
+0x2A 
+[0;32mI (15783) SPI: Received:[0m
+0x24 
+[0;32mI (16283) SPI: Received:[0m
+0x5C 
+[0;32mI (16783) SPI: Received:[0m
+0x5C 
+[0;32mI (17283) SPI: Received:[0m
+0x5C 
+[0;32mI (17783) SPI: Received:[0m
+0x5C 
+[0;32mI (18283) SPI: Received:[0m
+0x72 
+[0;32mI (18783) SPI: Received:[0m
+0x32 
+[0;32mI (19283) SPI: Received:[0m
+0x32 
+[0;32mI (19783) SPI: Received:[0m
+0x32 
+[0;32mI (20283) SPI: Received:[0m
+0x36 
+[0;32mI (20783) SPI: Received:[0m
+0x36 
+[0;32mI (21283) SPI: Received:[0m
+0x36 
+[0;32mI (21783) SPI: Received:[0m
+0x36 
+[0;32mI (22283) SPI: Received:[0m
+0x38 
+[0;32mI (22783) SPI: Received:[0m
+0x74 
+[0;32mI (23283) SPI: Received:[0m
+0x74 
+[0;32mI (23783) SPI: Received:[0m
+0x74 
+[0;32mI (24283) SPI: Received:[0m
+0x3C 
+[0;32mI (24783) SPI: Received:[0m
+0x7C 
+[0;32mI (25283) SPI: Received:[0m
+0x42 
+[0;32mI (25783) SPI: Received:[0m
+0x42 
+[0;32mI (26283) SPI: Received:[0m
+0x44 
+[0;32mI (26783) SPI: Received:[0m
+0x44 
+[0;32mI (27283) SPI: Received:[0m
+0x46 
+[0;32mI (27783) SPI: Received:[0m
+0x46 
+[0;32mI (28283) SPI: Received:[0m
+0x48 
+[0;32mI (28783) SPI: Received:[0m
+0x48 
+[0;32mI (29283) SPI: Received:[0m
+0x4A 
+[0;32mI (29783) SPI: Received:[0m
+0x4A 
+[0;32mI (30283) SPI: Received:[0m
+0x4C 
+[0;32mI (30783) SPI: Received:[0m
+0x4C 
+[0;32mI (31283) SPI: Received:[0m
+0x4E 
+[0;32mI (31783) SPI: Received:[0m
+0x4E 
+[0;32mI (32283) SPI: Received:[0m
+0x50 
+[0;32mI (32783) SPI: Received:[0m
+0x50 
+[0;32mI (33283) SPI: Received:[0m
+0x52 
+[0;32mI (33783) SPI: Received:[0m
+0x52 
+[0;32mI (34283) SPI: Received:[0m
+0x54 
+[0;32mI (34783) SPI: Received:[0m
+0x54 
+[0;32mI (35283) SPI: Received:[0m
+0x56 
+[0;32mI (35783) SPI: Received:[0m
+0x56 
+[0;32mI (36283) SPI: Received:[0m
+0x58 
+[0;32mI (36783) SPI: Received:[0m
+0x58 
+[0;32mI (37283) SPI: Received:[0m
+0x5A 
+[0;32mI (37783) SPI: Received:[0m
+0x5A 
+[0;32mI (38283) SPI: Received:[0m
+0x5C 
+[0;32mI (38783) SPI: Received:[0m
+0x5C 
+[0;32mI (39283) SPI: Received:[0m
+0x5E 
+[0;32mI (39783) SPI: Received:[0m
+0x5E 
+[0;32mI (40283) SPI: Received:[0m
+0x60 
+[0;32mI (40783) SPI: Received:[0m
+0x60 
+[0;32mI (41283) SPI: Received:[0m
+0x62 
+[0;32mI (41783) SPI: Received:[0m
+0x62 
+[0;32mI (42283) SPI: Received:[0m
+0x64 
+[0;32mI (42783) SPI: Received:[0m
+0x64 
+[0;32mI (43283) SPI: Received:[0m
+0x66 
+[0;32mI (43783) SPI: Received:[0m
+0x66 
+[0;32mI (44283) SPI: Received:[0m
+0x68 
+[0;32mI (44783) SPI: Received:[0m
+0x68 
+[0;32mI (45283) SPI: Received:[0m
+0x6A 
+[0;32mI (45783) SPI: Received:[0m
+0x6A 
+[0;32mI (46283) SPI: Received:[0m
+0x6C 
+[0;32mI (46783) SPI: Received:[0m
+0x6C 
+[0;32mI (47283) SPI: Received:[0m
+0x6E 
+[0;32mI (47783) SPI: Received:[0m
+0x6E 
+[0;32mI (48283) SPI: Received:[0m
+0x70 
+[0;32mI (48783) SPI: Received:[0m
+0x70 
+[0;32mI (49283) SPI: Received:[0m
+0x72 
+[0;32mI (49783) SPI: Received:[0m
+0x70 
+[0;32mI (50283) SPI: Received:[0m
+0xE4 
+[0;32mI (50783) SPI: Received:[0m
+0xE4 
+[0;32mI (51283) SPI: Received:[0m
+0xEC 
+[0;32mI (51783) SPI: Received:[0m
+0xEC 
+[0;32mI (52283) SPI: Received:[0m
+0xEC 
+[0;32mI (52783) SPI: Received:[0m
+0xED 
+[0;32mI (53283) SPI: Received:[0m
+0x79 
+[0;32mI (53783) SPI: Received:[0m
+0x79 
+[0;32mI (54283) SPI: Received:[0m
+0x79 
+[0;32mI (54783) SPI: Received:[0m
+0x79 
+[0;32mI (55283) SPI: Received:[0m
+0x7D 
+[0;32mI (55783) SPI: Received:[0m
+0x7D 
+[0;32mI (56283) SPI: Received:[0m
+0x7A 
+[0;32mI (56783) SPI: Received:[0m
+0xFB 
+[0;32mI (57283) SPI: Received:[0m
+0x03 
+[0;32mI (57783) SPI: Received:[0m
+0x02 
+[0;32mI (58283) SPI: Received:[0m
+0x06 
+[0;32mI (58783) SPI: Received:[0m
+0x06 
+[0;32mI (59283) SPI: Received:[0m
+0x07 
+[0;32mI (59783) SPI: Received:[0m
+0x0F 
+[0;32mI (60283) SPI: Received:[0m
+0x0F 
+[0;32mI (60783) SPI: Received:[0m
+0x0F 
+[0;32mI (61283) SPI: Received:[0m
+0x08 
+[0;32mI (61783) SPI: Received:[0m
+0x88 

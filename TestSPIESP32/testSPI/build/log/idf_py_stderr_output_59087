@@ -1,0 +1,287 @@
+[0;33m--- esp-idf-monitor 1.6.2 on /dev/ttyUSB0 115200[0m
+[0;33m--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e57: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1023
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082f7c: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1148
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e9a: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1055
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e76: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1043
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082dc6: _xt_user_exit at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:834
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e7c: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1046
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e68: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1038
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082f83: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1153
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x400876f5: _frxt_coproc_exc_hook at /home/long/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:742
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e87: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1050
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e87: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1050
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082dc9: _xt_user_exit at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:835
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082dc6: _xt_user_exit at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:834
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082dc4: _xt_user_exit at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:833
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x400876c1: _frxt_task_coproc_state at /home/long/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:699
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e7f: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1047
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e79: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1046
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x400876fa: _frxt_coproc_exc_hook at /home/long/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:744
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e73: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1042
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x400876eb: _frxt_coproc_exc_hook at /home/long/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:736
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e29: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:995
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e7c: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1046
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e9a: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1055
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e2f: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:999
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e8e: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1055
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e70: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1041
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e62: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1033
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e9a: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1055
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082eaa: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1066
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e1c: _xt_syscall_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:977
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082ea0: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1060
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x400876cd: _frxt_task_coproc_state at /home/long/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:699
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x4008e4af: _xt_context_restore at /home/long/esp/esp-idf/components/xtensa/xtensa_context.S:331
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082dc6: _xt_user_exit at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:834
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e1c: _xt_syscall_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:977
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x400876e6: _frxt_coproc_exc_hook at /home/long/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:733
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e1c: _xt_syscall_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:977
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e68: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1038
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e1c: _xt_syscall_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:977
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e81: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1048
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082f81: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1151
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e2c: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:997
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e50: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1017
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e54: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1022
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e81: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1048
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x400876cf: _frxt_task_coproc_state at /home/long/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:699
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082eaa: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1066
+[0m
+[0m
