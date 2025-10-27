@@ -3,7 +3,7 @@ OBJCOPY = arm-none-eabi-objcopy
 MCU = cortex-m3
 LS = linker_script.ld
 
-CFLAGS = -mcpu=$(MCU) -mthumb -std=gnu11 -O0 -Wall -g3
+CFLAGS = -mcpu=$(MCU) -mthumb -std=gnu11 -O0 -Wall
 LFLAGS = -nostartfiles -T $(LS)
 BFLAGS = -O binary
 
