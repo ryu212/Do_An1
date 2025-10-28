@@ -4,12 +4,24 @@ matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 import paho.mqtt.client as mqtt
 import os
-
-
+from scipy.signal import butter, filtfilt
+import numpy as np
 # MQTT cấu hình
 MQTT_BROKER = "localhost"
 MQTT_TOPIC = "ecg/data"
+def butter_bandpass(lowcut, highcut, fs, order=2):
+    nyq = 0.5 * fs   # Tần số Nyquist
+    low = lowcut / nyq
+    high = highcut / nyq
+    b, a = butter(order, [low, high], btype='band')
+    return b, a
+
+def bandpass_filter(data, lowcut=0.5, highcut=60, fs=250, order=2):
+    b, a = butter_bandpass(lowcut, highcut, fs, order=order)
+    y = filtfilt(b, a, data)   # lọc hai chiều -> không trễ pha
+    return y
 # Bật chế độ interactive
+
 plt.ion()
 
 # Tạo figure và 2 subplot
@@ -26,28 +38,28 @@ for ax, title in zip([ax1, ax2], ["ECG Lead 1", "ECG Lead 2"]):
     ax.legend()
 
 # Buffer dữ liệu để hiển thị
-lead1_data = []
-lead2_data = []
+lead1_data = np.array([])
+lead2_data = np.array([])
 
 def on_message(client, userdata, msg):
     global lead1_data, lead2_data
 
     payload = msg.payload.decode('utf-8')
     data = json.loads(payload)
-    new_lead1 = data.get("input1", [])
-    new_lead2 = data.get("input2", [])
-
+    new_lead1 = np.array(data.get("input1", []))
+    new_lead2 = np.array(data.get("input2", []))
+    new_lead1 = bandpass_filter(data = new_lead1)
     # Thêm dữ liệu mới
-    lead1_data.extend(new_lead1)
-    lead2_data.extend(new_lead2)
-
+    lead1_data= np.concatenate((lead1_data, new_lead1))
+    lead2_data= np.concatenate((lead2_data, new_lead2))
+    
     # Giữ lại tối đa 250 mẫu để hiển thị (rolling window)
-    lead1_data = lead1_data[-250:]
-    lead2_data = lead2_data[-250:]
-
+    lead1_data = lead1_data[-1000:]
+    lead2_data = lead2_data[-1000:]
+    
     # Cập nhật dữ liệu cho line
     line1.set_data(range(len(lead1_data)), lead1_data)
-    line2.set_data(range(len(lead2_data)), lead2_data)
+    # line2.set_data(range(len(lead2_data)), lead2_data)
 
     # Cập nhật giới hạn X nếu cần
     ax1.set_xlim(0, len(lead1_data))
