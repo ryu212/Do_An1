@@ -22,4 +22,4 @@ set confirm off
 set confirm on
 
 # Load application symbols
-file /home/long/DO_AN_1/build/bootloader/bootloader.elf
+file /home/long/DO_AN_1/ESP/build/bootloader/bootloader.elf

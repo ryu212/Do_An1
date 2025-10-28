@@ -18,8 +18,8 @@ end
 
 # Load bootloader symbols
 set confirm off
-    add-symbol-file /home/long/DO_AN_1/build/bootloader/bootloader.elf
+    add-symbol-file /home/long/DO_AN_1/ESP/build/bootloader/bootloader.elf
 set confirm on
 
 # Load application symbols
-file /home/long/DO_AN_1/build/..elf
+file /home/long/DO_AN_1/ESP/build/..elf

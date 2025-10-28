@@ -1,4 +1,4 @@
-# Install script for directory: /home/long/DO_AN_1/main
+# Install script for directory: /home/long/DO_AN_1/ESP/main
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)

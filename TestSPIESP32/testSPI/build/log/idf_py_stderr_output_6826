@@ -1,0 +1,17 @@
+[0;33m--- esp-idf-monitor 1.6.2 on /dev/ttyUSB0 115200[0m
+[0;33m--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- Warning: Checksum mismatch between flashed and built applications. Checksum of built application is e5b5c35e519f7d44a1066092810b6c7a1d158d246f2f729cee60ca0b74fd6c80[0m
+[1;31m--- Error: device reports readiness to read but returned no data (device disconnected or multiple access on port?)[0m
+[0;33m--- Waiting for the device to reconnect[0m[0;33m[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x400803c0: _DoubleExceptionVector at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:564
+[0m
+[0;33m--- 0x400854aa: esp_cpu_wait_for_intr at /home/long/esp/esp-idf/components/esp_hw_support/cpu.c:64
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- Warning: Checksum mismatch between flashed and built applications. Checksum of built application is e5b5c35e519f7d44a1066092810b6c7a1d158d246f2f729cee60ca0b74fd6c80[0m
+[0m

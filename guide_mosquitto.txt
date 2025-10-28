@@ -1,0 +1,8 @@
+Mosquitto: chạy broker
+Hiện thực: mosquitto -v -p 1883
+Mosquitto_pub: publish 
+Cú pháp: mosquitto_pub -h <broker_address> -p <port> -t <topic> -m <message>
+Mosquitto_sub: subcribe 
+Cú pháp: mosquitto_sub -h <broker_address> -p <port> -t <topic>
+Có thể thay -h <broker_address> -p <port> bằng -h localhost 
+Thêm tùy chọn -v để hiển thị cả tên topic và mesage

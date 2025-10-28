@@ -1,0 +1,95 @@
+[0;33m--- esp-idf-monitor 1.6.2 on /dev/ttyUSB0 115200[0m
+[0;33m--- Quit: Ctrl+] | Menu: Ctrl+T | Help: Ctrl+T followed by Ctrl+H[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x400876ff: _frxt_coproc_exc_hook at /home/long/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:746
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x400876ca: _frxt_task_coproc_state at /home/long/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:699
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x400876b5: _frxt_task_coproc_state at /home/long/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:695
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x400876bf: _frxt_task_coproc_state at /home/long/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:699
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082eae: _xt_coproc_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:1076
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e1c: _xt_syscall_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:977
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x400876a6: _frxt_task_coproc_state at /home/long/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:688
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x400876b5: _frxt_task_coproc_state at /home/long/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:695
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x400876c3: _frxt_task_coproc_state at /home/long/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:699
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x400876b5: _frxt_task_coproc_state at /home/long/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:695
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x400876b5: _frxt_task_coproc_state at /home/long/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:695
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x40082e1c: _xt_syscall_exc at /home/long/esp/esp-idf/components/xtensa/xtensa_vectors.S:977
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x400876ba: _frxt_task_coproc_state at /home/long/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:698
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x400876bc: _frxt_task_coproc_state at /home/long/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:699
+[0m
+[0;33m--- 0x40080400: _init at ??:?
+[0m
+[0;33m--- 0x40081a0e: panicHandler at /home/long/esp/esp-idf/components/esp_system/port/panic_handler.c:247
+[0m
+[0;33m--- 0x400876b2: _frxt_task_coproc_state at /home/long/esp/esp-idf/components/freertos/FreeRTOS-Kernel/portable/xtensa/portasm.S:694
+[0m
+[0m

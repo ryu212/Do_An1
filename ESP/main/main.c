@@ -2,15 +2,16 @@
 #include "Wifi.h"
 #include "Data.h"
 #include "Mqtt.h"
+#include "Spi.h"
 #define TOPIC "ecg/data"
 float arr1[250];
 float arr2[250];
+void memset_buffer(void);
+void mqtt_task(void* arg);
 void app_main(void)
 {
-    for (int i = 0; i < 250; i++)
-    {
-        arr1[i] = arr2[i] = 0.5;
-    }
+    
+    memset_buffer();
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
       ESP_ERROR_CHECK(nvs_flash_erase());
@@ -21,16 +22,29 @@ void app_main(void)
     ESP_LOGI("WIFI", "ESP_WIFI_MODE_STA");
     wifi_sta_init();
     mqtt_app_start();
+    spi_slave_init();
+    init_spi_queue();
     subscribe_single_topic(TOPIC);
+    xTaskCreate(spi_slave_task, "SPI_TASK", 4096, NULL, 10, NULL);
+    xTaskCreate(mqtt_task, "MQTT_TASK", 4096, NULL, 10, NULL);
+}
+
+void memset_buffer(void)
+{
+    for (int i = 0; i < 250; i++)
+    {
+        arr1[i] = arr2[i] = 0;
+    }
+}
+void mqtt_task(void* arg)
+{
     while(1)
     {
-        char* data = create_json_two_arrays(arr1, arr2);
-        publish(TOPIC, data);
-        for (int i = 0; i < 250; i++)
-        {
-            arr1[i] += 0.05;
-            arr2[i] += 0.05;
+        if (xQueueReceive(spi_data_queue, arr1, portMAX_DELAY) == pdTRUE) {
+            ESP_LOGI("MQTT_TASK", "Read from queue");
+            char* json_str = create_json_one_arrays(arr1);
+            publish(TOPIC, json_str);
         }
-        vTaskDelay(500);
+        vTaskDelay(pdMS_TO_TICKS(10));
     }
 }

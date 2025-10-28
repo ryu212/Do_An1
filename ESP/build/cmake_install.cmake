@@ -1,4 +1,4 @@
-# Install script for directory: /home/long/DO_AN_1
+# Install script for directory: /home/long/DO_AN_1/ESP
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -39,7 +39,7 @@ endif()
 
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for the subdirectory.
-  include("/home/long/DO_AN_1/build/esp-idf/cmake_install.cmake")
+  include("/home/long/DO_AN_1/ESP/build/esp-idf/cmake_install.cmake")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -50,5 +50,5 @@ endif()
 
 string(REPLACE ";" "\n" CMAKE_INSTALL_MANIFEST_CONTENT
        "${CMAKE_INSTALL_MANIFEST_FILES}")
-file(WRITE "/home/long/DO_AN_1/build/${CMAKE_INSTALL_MANIFEST}"
+file(WRITE "/home/long/DO_AN_1/ESP/build/${CMAKE_INSTALL_MANIFEST}"
      "${CMAKE_INSTALL_MANIFEST_CONTENT}")
