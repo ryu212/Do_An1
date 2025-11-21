@@ -4,8 +4,8 @@
 #include "Mqtt.h"
 #include "Spi.h"
 #define TOPIC "ecg/data"
-float arr1[250];
-float arr2[250];
+float arr1[360];
+float arr2[360];
 void memset_buffer(void);
 void mqtt_task(void* arg);
 void app_main(void)
@@ -31,7 +31,7 @@ void app_main(void)
 
 void memset_buffer(void)
 {
-    for (int i = 0; i < 250; i++)
+    for (int i = 0; i < 360; i++)
     {
         arr1[i] = arr2[i] = 0;
     }

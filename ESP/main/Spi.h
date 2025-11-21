@@ -4,7 +4,7 @@
 #include <stdint.h>
 #include "esp_err.h"
 
-#define BUFFER_SIZE   500
+#define BUFFER_SIZE   720
 extern QueueHandle_t spi_data_queue;
 
 // Hàm khởi tạo SPI slave

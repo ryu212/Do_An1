@@ -16,7 +16,7 @@ def butter_bandpass(lowcut, highcut, fs, order=2):
     b, a = butter(order, [low, high], btype='band')
     return b, a
 
-def bandpass_filter(data, lowcut=0.5, highcut=60, fs=250, order=2):
+def bandpass_filter(data, lowcut=0.5, highcut=40, fs=360, order=2):
     b, a = butter_bandpass(lowcut, highcut, fs, order=order)
     y = filtfilt(b, a, data)   # lọc hai chiều -> không trễ pha
     return y
@@ -30,10 +30,10 @@ line1, = ax1.plot([], [], color='blue', label="Lead 1")
 line2, = ax2.plot([], [], color='red', label="Lead 2")
 # Callback khi có dữ liệu về
 for ax, title in zip([ax1, ax2], ["ECG Lead 1", "ECG Lead 2"]):
-    ax.set_xlim(0, 250)
-    ax.set_ylim(-1, 1)
+    ax.set_xlim(0, 360)
+    ax.set_ylim(0, 1)
     ax.set_xlabel(title)
-    ax.set_ylabel("Amplitude (V)")
+    ax.set_ylabel("Amplitude")
     ax.grid(True)
     ax.legend()
 
@@ -48,7 +48,7 @@ def on_message(client, userdata, msg):
     data = json.loads(payload)
     new_lead1 = np.array(data.get("input1", []))
     new_lead2 = np.array(data.get("input2", []))
-    new_lead1 = bandpass_filter(data = new_lead1)
+    #new_lead1 = bandpass_filter(data = new_lead1)
     # Thêm dữ liệu mới
     lead1_data= np.concatenate((lead1_data, new_lead1))
     lead2_data= np.concatenate((lead2_data, new_lead2))

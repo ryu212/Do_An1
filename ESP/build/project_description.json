@@ -1,7 +1,7 @@
 {
     "version":            "1.2",
     "project_name":       ".",
-    "project_version":    "6699a7a-dirty",
+    "project_version":    "3303fed-dirty",
     "project_path":       "/home/long/DO_AN_1/ESP",
     "idf_path":           "/home/long/esp/esp-idf",
     "build_dir":          "/home/long/DO_AN_1/ESP/build",

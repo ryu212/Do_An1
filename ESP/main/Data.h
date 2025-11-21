@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include "cJSON.h"
 
-#define LENGHT_DATA 250
+#define LENGHT_DATA 360
 char *create_json_two_arrays(float *arr1, float *arr2);
 char *create_json_one_arrays(float *arr);
 #endif
