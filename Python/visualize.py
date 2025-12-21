@@ -6,11 +6,22 @@ import paho.mqtt.client as mqtt
 import os
 from scipy.signal import butter, filtfilt
 import numpy as np
-# MQTT cấu hình
+from cnn_lstm import CNN_LSTM
+import torch
+import pywt
+
 MQTT_BROKER = "localhost"
 MQTT_TOPIC = "ecg/data"
+WINDOW_SIZE = 360
+label2id = {'N': 0, 'S': 1, 'V': 2, 'F': 3, 'Q': 4}
+id2label = {0: 'Normal beats', 1: 'Supraventricular ectopic beats', 2: 'Ventricular ectopic beats', 3: 'Fusion beats', 4: 'Unknown / Paced beats '}
+model = CNN_LSTM()
+state_dict = torch.load("cnn_lstm_ecg.pth", map_location="cpu")
+model.load_state_dict(state_dict)
+model.eval()
+
 def butter_bandpass(lowcut, highcut, fs, order=2):
-    nyq = 0.5 * fs   # Tần số Nyquist
+    nyq = 0.5 * fs   
     low = lowcut / nyq
     high = highcut / nyq
     b, a = butter(order, [low, high], btype='band')
@@ -18,17 +29,38 @@ def butter_bandpass(lowcut, highcut, fs, order=2):
 
 def bandpass_filter(data, lowcut=0.5, highcut=40, fs=360, order=2):
     b, a = butter_bandpass(lowcut, highcut, fs, order=order)
-    y = filtfilt(b, a, data)   # lọc hai chiều -> không trễ pha
+    y = filtfilt(b, a, data) 
     return y
-# Bật chế độ interactive
+
+def infer_ecg(signal_1d: np.ndarray):
+    """
+    signal_1d: (360,)
+    """
+    signal_1d = (signal_1d - np.mean(signal_1d)) / (np.std(signal_1d) + 1e-6)
+    x = torch.tensor(signal_1d, dtype=torch.float32)
+    x = x.unsqueeze(0).unsqueeze(1)  # (1, 1, 360)
+    with torch.no_grad():
+        logits = model(x)
+        prob = torch.softmax(logits, dim=1)
+        pred = torch.argmax(prob, dim=1)
+    return pred.item(), prob.squeeze().numpy()
+def WaveletTransform(signal,wave_func, ):
+    sampling_rate = 360 
+    t = np.linspace(0, 10, 10 * sampling_rate)
+
+    scales = np.arange(1,50)
+    coefficients, frequencies = pywt.cwt(signal, scales, wave_func, sampling_period=1/sampling_rate)
+
+    selected_coefficients = np.sum(coefficients[5:30, :], axis=0)
+
+    selected_coefficients /= np.max(np.abs(selected_coefficients))
+    return selected_coefficients
 
 plt.ion()
-
-# Tạo figure và 2 subplot
 fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(10, 5))
 line1, = ax1.plot([], [], color='blue', label="Lead 1")
 line2, = ax2.plot([], [], color='red', label="Lead 2")
-# Callback khi có dữ liệu về
+
 for ax, title in zip([ax1, ax2], ["ECG Lead 1", "ECG Lead 2"]):
     ax.set_xlim(0, 360)
     ax.set_ylim(0, 1)
@@ -37,7 +69,6 @@ for ax, title in zip([ax1, ax2], ["ECG Lead 1", "ECG Lead 2"]):
     ax.grid(True)
     ax.legend()
 
-# Buffer dữ liệu để hiển thị
 lead1_data = np.array([])
 lead2_data = np.array([])
 
@@ -49,7 +80,6 @@ def on_message(client, userdata, msg):
     new_lead1 = np.array(data.get("input1", []))
     new_lead2 = np.array(data.get("input2", []))
     #new_lead1 = bandpass_filter(data = new_lead1)
-    # Thêm dữ liệu mới
     lead1_data= np.concatenate((lead1_data, new_lead1))
     lead2_data= np.concatenate((lead2_data, new_lead2))
     
@@ -57,25 +87,33 @@ def on_message(client, userdata, msg):
     lead1_data = lead1_data[-1000:]
     lead2_data = lead2_data[-1000:]
     
-    # Cập nhật dữ liệu cho line
-    line1.set_data(range(len(lead1_data)), lead1_data)
-    # line2.set_data(range(len(lead2_data)), lead2_data)
+    label_text = ""
+    if len(lead1_data) >= WINDOW_SIZE:
+        window = lead1_data[-WINDOW_SIZE:]
+        #window = (window - window.mean()) / (window.std() + 1e-6)
+        pred, prob = infer_ecg(window)
+       
+        label_text = f"{id2label[pred]} ({prob[pred]:.2f})"
+        print(f"[ECG] Predicted class: {id2label[pred]}, confidence: {prob[pred]:.3f}")
 
-    # Cập nhật giới hạn X nếu cần
+
+
+    line1.set_data(range(len(lead1_data)), lead1_data)
+
     ax1.set_xlim(0, len(lead1_data))
     ax2.set_xlim(0, len(lead2_data))
-
-    # Redraw
+    ax1.set_title(f"Lead 1 - Predicted: {label_text}", fontsize=12, color='green')
+    print("Mean X = ", window[-WINDOW_SIZE:].mean())
+    print("Max X = ", window[-WINDOW_SIZE:].max())
     fig.canvas.draw()
     fig.canvas.flush_events()
 
 
-# MQTT client setup
 client = mqtt.Client()
 client.on_message = on_message
 
 client.connect(MQTT_BROKER, 1883, 60)
 client.subscribe(MQTT_TOPIC)
 
-print(f"📡 Đang nghe MQTT tại broker: {MQTT_BROKER}, topic: {MQTT_TOPIC}")
+print(f"Đang nghe MQTT tại broker: {MQTT_BROKER}, topic: {MQTT_TOPIC}")
 client.loop_forever()

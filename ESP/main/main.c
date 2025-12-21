@@ -10,7 +10,6 @@ void memset_buffer(void);
 void mqtt_task(void* arg);
 void app_main(void)
 {
-    
     memset_buffer();
     esp_err_t ret = nvs_flash_init();
     if (ret == ESP_ERR_NVS_NO_FREE_PAGES || ret == ESP_ERR_NVS_NEW_VERSION_FOUND) {
