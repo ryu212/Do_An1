@@ -9,6 +9,9 @@ import numpy as np
 from cnn_lstm import CNN_LSTM
 import torch
 import pywt
+from scipy.signal import find_peaks
+ 
+
 
 MQTT_BROKER = "localhost"
 MQTT_TOPIC = "ecg/data"
@@ -31,6 +34,13 @@ def bandpass_filter(data, lowcut=0.5, highcut=40, fs=360, order=2):
     b, a = butter_bandpass(lowcut, highcut, fs, order=order)
     y = filtfilt(b, a, data) 
     return y
+def find_r_peaks(ecg, fs=360):
+    peaks, properties = find_peaks(
+        ecg,
+        distance=int(0.25 * fs),      # 250ms
+        height=0.7              
+    )
+    return peaks
 
 def infer_ecg(signal_1d: np.ndarray):
     """
@@ -74,7 +84,7 @@ lead2_data = np.array([])
 
 def on_message(client, userdata, msg):
     global lead1_data, lead2_data
-
+    lead1_inferrence = None
     payload = msg.payload.decode('utf-8')
     data = json.loads(payload)
     new_lead1 = np.array(data.get("input1", []))
@@ -83,7 +93,7 @@ def on_message(client, userdata, msg):
     lead1_data= np.concatenate((lead1_data, new_lead1))
     lead2_data= np.concatenate((lead2_data, new_lead2))
     
-    # Giữ lại tối đa 250 mẫu để hiển thị (rolling window)
+    # 1000 sample
     lead1_data = lead1_data[-1000:]
     lead2_data = lead2_data[-1000:]
     
@@ -96,15 +106,31 @@ def on_message(client, userdata, msg):
         label_text = f"{id2label[pred]} ({prob[pred]:.2f})"
         print(f"[ECG] Predicted class: {id2label[pred]}, confidence: {prob[pred]:.3f}")
 
+    data_inference = None
+    if len(lead1_data) > 720:
+        lead1_inferrence = lead1_data[-720:]
+    
+    if lead1_inferrence is not None:
+        peaks = find_r_peaks(lead1_inferrence, 360)
+        for peak in peaks:
+            left = peak - 180
+            right = peak + 180
+            if left < 0 or right > len(lead1_inferrence):
+                continue
 
-
+            data_inference = lead1_inferrence[left:right]
+            # data_inference -= data_inference.mean()
+            # data_inference = (data_inference - data_inference.mean()) / \
+            #                 (data_inference.std() + 1e-6)
+            pred, prob = infer_ecg(data_inference)
     line1.set_data(range(len(lead1_data)), lead1_data)
 
     ax1.set_xlim(0, len(lead1_data))
     ax2.set_xlim(0, len(lead2_data))
     ax1.set_title(f"Lead 1 - Predicted: {label_text}", fontsize=12, color='green')
-    print("Mean X = ", window[-WINDOW_SIZE:].mean())
-    print("Max X = ", window[-WINDOW_SIZE:].max())
+    if data_inference is not None:
+        print("Mean X = ", data_inference.mean())
+        print("Max X = ", data_inference.max())
     fig.canvas.draw()
     fig.canvas.flush_events()
 

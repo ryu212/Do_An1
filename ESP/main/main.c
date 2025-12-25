@@ -43,7 +43,9 @@ void mqtt_task(void* arg)
             ESP_LOGI("MQTT_TASK", "Read from queue");
             char* json_str = create_json_one_arrays(arr1);
             publish(TOPIC, json_str);
+            free(json_str);             
         }
         vTaskDelay(pdMS_TO_TICKS(10));
+
     }
 }
