@@ -30,7 +30,7 @@ def butter_bandpass(lowcut, highcut, fs, order=2):
     b, a = butter(order, [low, high], btype='band')
     return b, a
 
-def bandpass_filter(data, lowcut=0.5, highcut=40, fs=360, order=2):
+def bandpass_filter(data, lowcut=0.05, highcut=150, fs=360, order=2):
     b, a = butter_bandpass(lowcut, highcut, fs, order=order)
     y = filtfilt(b, a, data) 
     return y
@@ -89,13 +89,13 @@ def on_message(client, userdata, msg):
     data = json.loads(payload)
     new_lead1 = np.array(data.get("input1", []))
     new_lead2 = np.array(data.get("input2", []))
-    #new_lead1 = bandpass_filter(data = new_lead1)
+    # new_lead1 = bandpass_filter(data = new_lead1)
     lead1_data= np.concatenate((lead1_data, new_lead1))
     lead2_data= np.concatenate((lead2_data, new_lead2))
     
     # 1000 sample
-    lead1_data = lead1_data[-1000:]
-    lead2_data = lead2_data[-1000:]
+    lead1_data = lead1_data[-720:]
+    lead2_data = lead2_data[-720:]
     
     label_text = ""
     if len(lead1_data) >= WINDOW_SIZE:
