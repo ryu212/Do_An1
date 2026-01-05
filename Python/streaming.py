@@ -10,7 +10,7 @@ from cnn_lstm import CNN_LSTM
 import torch
 import pywt
 from scipy.signal import find_peaks
- 
+from filter_wavelet  import filter_wavelet
 
 
 MQTT_BROKER = "localhost"
@@ -94,43 +94,14 @@ def on_message(client, userdata, msg):
     lead2_data= np.concatenate((lead2_data, new_lead2))
     
     # 1000 sample
-    lead1_data = lead1_data[-720:]
-    lead2_data = lead2_data[-720:]
+    lead1_data = lead1_data[-1000:]
+    lead1_data = filter_wavelet(lead1_data)
+    lead2_data = lead2_data[-1000:]
     
-    label_text = ""
-    if len(lead1_data) >= WINDOW_SIZE:
-        window = lead1_data[-WINDOW_SIZE:]
-        #window = (window - window.mean()) / (window.std() + 1e-6)
-        pred, prob = infer_ecg(window)
-       
-        label_text = f"{id2label[pred]} ({prob[pred]:.2f})"
-        print(f"[ECG] Predicted class: {id2label[pred]}, confidence: {prob[pred]:.3f}")
-
-    data_inference = None
-    if len(lead1_data) > 720:
-        lead1_inferrence = lead1_data[-720:]
-    
-    if lead1_inferrence is not None:
-        peaks = find_r_peaks(lead1_inferrence, 360)
-        for peak in peaks:
-            left = peak - 180
-            right = peak + 180
-            if left < 0 or right > len(lead1_inferrence):
-                continue
-
-            data_inference = lead1_inferrence[left:right]
-            # data_inference -= data_inference.mean()
-            # data_inference = (data_inference - data_inference.mean()) / \
-            #                 (data_inference.std() + 1e-6)
-            pred, prob = infer_ecg(data_inference)
     line1.set_data(range(len(lead1_data)), lead1_data)
 
     ax1.set_xlim(0, len(lead1_data))
     ax2.set_xlim(0, len(lead2_data))
-    ax1.set_title(f"Lead 1 - Predicted: {label_text}", fontsize=12, color='green')
-    if data_inference is not None:
-        print("Mean X = ", data_inference.mean())
-        print("Max X = ", data_inference.max())
     fig.canvas.draw()
     fig.canvas.flush_events()
 
