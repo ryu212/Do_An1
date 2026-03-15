@@ -1,0 +1,3 @@
+- json pointer from 'create_json_two_arrays' need to be freed after read.
+- config wifi password and ssid in file 'Wifi_Info.h'
+- config mqtt uri in file 'mqtt_app_start' in 'Mqtt.h'

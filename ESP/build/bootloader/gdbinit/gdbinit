@@ -1,0 +1,2 @@
+source D:/MonHoc_HK6/ECG_wireless/ESP/build/bootloader/gdbinit/symbols
+source D:/MonHoc_HK6/ECG_wireless/ESP/build/bootloader/gdbinit/connect
