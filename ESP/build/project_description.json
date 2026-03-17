@@ -1,7 +1,7 @@
 {
     "version":            "1.2",
     "project_name":       ".",
-    "project_version":    "1",
+    "project_version":    "3ba521c-dirty",
     "project_path":       "D:/MonHoc_HK6/ECG_wireless/ESP",
     "idf_path":           "C:/Espressif/frameworks/esp-idf-v5.5.2",
     "build_dir":          "D:/MonHoc_HK6/ECG_wireless/ESP/build",
@@ -1225,7 +1225,7 @@
             "managed_reqs": [],
             "managed_priv_reqs": [],
             "file": "D:/MonHoc_HK6/ECG_wireless/ESP/build/esp-idf/main/libmain.a",
-            "sources": [ "D:/MonHoc_HK6/ECG_wireless/ESP/main/Application/Data.c", "D:/MonHoc_HK6/ECG_wireless/ESP/main/Network/Mqtt.c", "D:/MonHoc_HK6/ECG_wireless/ESP/main/Network/Wifi.c", "D:/MonHoc_HK6/ECG_wireless/ESP/main/main.c", "D:/MonHoc_HK6/ECG_wireless/ESP/main/Driver/Spi.c", "D:/MonHoc_HK6/ECG_wireless/ESP/main/Driver/SDCard.c", "D:/MonHoc_HK6/ECG_wireless/ESP/build/CA.pem.S" ],
+            "sources": [ "D:/MonHoc_HK6/ECG_wireless/ESP/main/Application/Controller.c", "D:/MonHoc_HK6/ECG_wireless/ESP/main/Network/Mqtt.c", "D:/MonHoc_HK6/ECG_wireless/ESP/main/Network/Wifi.c", "D:/MonHoc_HK6/ECG_wireless/ESP/main/main.c", "D:/MonHoc_HK6/ECG_wireless/ESP/main/Driver/Spi.c", "D:/MonHoc_HK6/ECG_wireless/ESP/main/Driver/SDCard.c", "D:/MonHoc_HK6/ECG_wireless/ESP/build/CA.pem.S" ],
             "include_dirs": [ ".", "Driver", "Network", "Security ", "Application" ]
         },
         "mbedtls": {

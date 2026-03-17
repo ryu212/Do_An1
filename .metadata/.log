@@ -1,0 +1,22 @@
+!SESSION 2026-03-17 01:33:37.858 -----------------------------------------------
+eclipse.buildId=Version 2.0.0
+java.version=21.0.8
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2026-03-17 01:33:49.679
+!MESSAGE Log4j2 initialized with config file D:\MonHoc_HK6\ECG_wireless\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2026-03-17 01:33:53.090
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY com.st.stm32cube.ide.mpu.remote.serial 1 1 2026-03-17 01:33:54.017
+!MESSAGE Executed PowerShell command powershell.exe -Command "Get-CimInstance -ClassName Win32_SerialPort | Select-Object -ExpandProperty DeviceID":
+
+
+!ENTRY com.st.stm32cube.ide.mpu.remote.serial 1 1 2026-03-17 01:33:54.020
+!MESSAGE port: 
+
+!ENTRY org.eclipse.cdt.core 1 0 2026-03-17 01:34:15.583
+!MESSAGE Indexed 'STM32' (18 sources, 106 headers) in 2.68 sec: 7,541 declarations; 29,974 references; 2 unresolved inclusions; 36 syntax errors; 188 unresolved names (0.5%)

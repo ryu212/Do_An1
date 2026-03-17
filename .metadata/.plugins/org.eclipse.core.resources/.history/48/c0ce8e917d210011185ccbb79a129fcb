@@ -1,0 +1,56 @@
+#ifndef MAX30003W_H
+#define MAX30003W_H
+
+#include "main.h"
+#include <stdbool.h>
+extern SPI_HandleTypeDef hspi1;
+
+/*
+  SPI command frame structure when communicating with the MAX30003
+  on the MAX30003WING board (1 transaction = 4 bytes = 32 SCLK cycles)
+
+  Conditions:
+    - Pull CSB/SSEL low before starting the transaction
+    - Keep CSB/SSEL low during the entire 4-byte transfer
+    - Pull CSB/SSEL high to terminate the transaction
+
+  Byte 0 (command):
+    - Consists of a 7-bit register address A[6:0] and a 1-bit R/W flag
+    - R/W = 1: read
+    - R/W = 0: write
+    - Command format: cmd = (addr << 1) | rw
+
+  Bytes 1..3 (24-bit data, MSB first):
+    - Register write: MOSI transmits data[23:16], data[15:8], data[7:0]
+    - Register read: MOSI transmits 3 dummy bytes (0x00) to generate clock,
+      while MISO returns the 24-bit data in the last three bytes (rx[1], rx[2], rx[3])
+*/
+
+#define MAX30003_RW_WRITE            0x00
+#define MAX30003_RW_READ             0x01
+
+/* Register address used to read ECG FIFO.
+   Each read returns 24 bits containing the sample + tag. */
+#define MAX30003_REG_ECG_FIFO        0x21
+
+/* Structure of the 24-bit FIFO word returned when reading register 0x21
+   D[23:6] : 18-bit ECG sample (two's complement, left-justified)
+   D[5:3]  : ETAG[2:0], FIFO status
+   D[2:0]  : PTAG[2:0], auxiliary tag */
+#define MAX30003WING_SAMPLE_SHIFT           6
+#define MAX30003WING_SAMPLE_MASK_18         0x3FFFF
+#define MAX30003WING_ETAG_SHIFT             3
+#define MAX30003WING_ETAG_MASK              0x07
+
+/* Common ETAG values */
+#define MAX30003WING_ETAG_VALID             0x0   /* Valid sample */
+#define MAX30003WING_ETAG_VALID_EOF         0x2   /* Valid sample and end of FIFO */
+#define MAX30003WING_ETAG_EMPTY             0x6   /* FIFO empty */
+#define MAX30003WING_ETAG_OVERFLOW          0x7   /* FIFO overflow */
+
+/*Create byte cmd for max30003w*/
+#define MAX30003W_CREATE_CMD(addr, rw)   ((uint8_t)(((addr) << 1) | ((rw) & 0x01)))
+bool max30003_read_ecg_sample(int32_t *ecg_sample, uint8_t *etag);
+uint16_t max30003_read_block(int32_t *ecg_buffer, uint16_t max_samples);
+
+#endif // MAX30003W_H

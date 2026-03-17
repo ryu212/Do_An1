@@ -1,6 +1,6 @@
 idf_component_register(
     SRCS 
-    "Application/Data.c" 
+    "Application/Controller.c" 
     "Network/Mqtt.c" 
     "Network/Wifi.c" 
     "main.c" 

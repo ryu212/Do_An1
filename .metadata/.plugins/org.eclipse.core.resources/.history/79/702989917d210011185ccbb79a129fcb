@@ -1,0 +1,106 @@
+#include "max30003w.h"
+
+
+static inline void max_cs_low(void){
+     HAL_GPIO_WritePin(MAX_CS_GPIO_Port, MAX_CS_Pin, GPIO_PIN_RESET); //CS LOW
+}
+static inline void max_cs_high(void){
+    HAL_GPIO_WritePin(MAX_CS_GPIO_Port, MAX_CS_Pin, GPIO_PIN_SET); //CS HIGH
+}
+
+
+static uint32_t max30003_read24(uint8_t addr){
+    uint8_t tx[4];
+    uint8_t rx[4];
+
+    tx[0] = MAX30003W_CREATE_CMD(addr, MAX30003_RW_READ);
+    tx[1] = 0x00;
+    tx[2] = 0x00;
+    tx[3] = 0x00;
+
+    max_cs_low();
+    HAL_SPI_TransmitReceive(&hspi1, tx, rx, 4, HAL_MAX_DELAY);
+    max_cs_high();
+
+    return ((uint32_t)rx[1] << 16) | ((uint32_t)rx[2] << 8) | (uint32_t)rx[3];
+}
+static void max30003_write24(uint8_t addr, uint32_t data24){
+    uint8_t tx[4];
+    tx[0] = MAX30003W_CREATE_CMD(addr, MAX30003_RW_WRITE);
+    tx[1] = (data24 >> 16) & 0xFF;
+    tx[2] = (data24 >> 8) & 0xFF;
+    tx[3] = data24 & 0xFF;
+
+    max_cs_low();
+    HAL_SPI_Transmit(&hspi1, tx, 4, HAL_MAX_DELAY);
+    max_cs_high();
+}
+
+/* The FIFO stores 18-bit signed data; incorrect sign extension
+   may result in very large signed values. */
+static int32_t max30003_sign_extend_18bit(int32_t sample_18bit){
+    if(sample_18bit & (1 << 17)){ //if sign bit is 1
+        sample_18bit |= 0xFFFC0000; //extend sign to 32bit
+    }
+    return sample_18bit;
+}
+
+/* read 1 word from ECG FIFO (MAX30003_REG_ECG_FIFO = 0x21)
+   FIFO returns a 24-bit word:
+     - [23:6]  : 18-bit ECG sample (two's complement, left-justified)
+     - [5:3]   : ETAG (3-bit status tag)
+     - [2:0]   : PTAG (not used here)
+*/
+bool max30003_read_ecg_sample(int32_t *ecg_sample, uint8_t *etag)
+{
+    /* read one 24-bit FIFO word over SPI (4-byte frame) */
+    uint32_t fifo_word = max30003_read24(MAX30003_REG_ECG_FIFO);
+
+    /* extract ETAG from bits [5:3] to know whether the FIFO word is valid */
+    uint8_t read_etag = (fifo_word >> MAX30003WING_ETAG_SHIFT) & MAX30003WING_ETAG_MASK;
+
+    /* if ETAG indicates FIFO empty or overflow, there is no reliable ECG sample to use */
+    if (read_etag == MAX30003WING_ETAG_EMPTY || read_etag == MAX30003WING_ETAG_OVERFLOW) {
+        /* no valid sample available:
+           - EMPTY: you read too early (no new data in FIFO)
+           - OVERFLOW: FIFO overrun occurred (data may be lost/corrupted) */
+        return false;
+    }
+
+    /* extract the 18-bit ECG sample from bits [23:6] */
+    int32_t raw_sample = (fifo_word >> MAX30003WING_SAMPLE_SHIFT) & MAX30003WING_SAMPLE_MASK_18;
+
+    /* convert 18-bit two's complement into a signed 32-bit integer */
+    *ecg_sample = max30003_sign_extend_18bit(raw_sample);
+
+    /* optionally return the ETAG to the caller (useful for detecting EOF, etc.) */
+    if (etag != NULL) {
+        *etag = read_etag;
+    }
+    return true;
+}
+
+uint16_t max30003_read_block(int32_t *ecg_buffer, uint16_t max_samples)
+{
+    uint16_t samples_read = 0;
+    uint8_t etag;
+
+    /* read samples until the user buffer is full or FIFO has no more valid data */
+    while (samples_read < max_samples) {
+
+        /* read one ECG FIFO word; returns false if FIFO is empty/overflow (no valid sample) */
+        if (max30003_read_ecg_sample(&ecg_buffer[samples_read], &etag)) {
+            samples_read++;
+
+            /* ETAG_VALID_EOF marks the last valid sample currently available in the FIFO */
+            if (etag == MAX30003WING_ETAG_VALID_EOF) {
+                break; /* stop to avoid reading beyond the current FIFO content */
+            }
+        } else {
+            break; /* stop when no more valid samples are available */
+        }
+    }
+    /* number of valid ECG samples stored in ecg_buffer[] */
+    return samples_read;
+}
+
