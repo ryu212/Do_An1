@@ -101,10 +101,9 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-
     /* USER CODE BEGIN 3 */
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
-    HAL_SPI_Transmit(&hspi1, (uint8_t*)hspi1, LENGTH_BUFFER * sizeof(int32_t), HAL_MAX_DELAY);
+    HAL_SPI_Transmit(&hspi1, (uint8_t*)data_buffer, LENGTH_BUFFER * sizeof(int32_t), HAL_MAX_DELAY);
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_SET);
   }
   /* USER CODE END 3 */

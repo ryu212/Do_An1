@@ -7,6 +7,9 @@ extern "C" {
 
 #include "stm32f1xx_hal.h"
 #include <stdbool.h>
+#include <stdint.h>
+#include <stddef.h>
+
 /*
  SPI command frame structure when communicating with the MAX30003
  on the MAX30003WING board (1 transaction = 4 bytes = 32 SCLK cycles)
@@ -25,10 +28,10 @@ extern "C" {
  Bytes 1..3 (24-bit data, MSB first):
    - Register write: MOSI transmits data[23:16], data[15:8], data[7:0]
    - Register read: MOSI transmits 3 dummy bytes (0x00) to generate clock,
-    while MISO returns the 24-bit data in the last three bytes (rx[1], rx[2],
- rx[3])
+     while MISO returns the 24-bit data in the last three bytes,
+     in 18bit is ecg value, and 7 bit is etag/ptag  
 */
-enum : uint8_t {
+typedef enum {
   // no-operation register at address 0x00
   // used when you want to clock the SPI bus without affecting internal device
   // state
@@ -121,55 +124,98 @@ enum : uint8_t {
   // datasheet provides both 0x00 and 0x7F as no-op addresses
   // useful as a harmless dummy access in SPI transactions
   REG_NO_OP_ALT = 0x7F
-};
+} MAX30003_Reg_t;
 
 // Sampling rates supported
-enum SamplingRate : uint16_t { SR_128 = 128, SR_256 = 256, SR_512 = 512 };
+typedef enum {
+  SR_128 = 128,
+  SR_256 = 256,
+  SR_512 = 512
+} SamplingRate;
+
+// tag status   
+typedef enum {
+    // valid ECG sample
+    MAX30003_ETAG_VALID            = 0x00,
+
+    // sample taken during fast recovery mode
+    // time step is valid but voltage data is not valid
+    MAX30003_ETAG_FAST             = 0x01,
+
+    // valid ECG sample and end of fifo currently available data
+    MAX30003_ETAG_VALID_EOF        = 0x02,
+
+    // fast recovery sample and end of fifo currently available data
+    // time step is valid but voltage data is not valid
+    MAX30003_ETAG_FAST_EOF         = 0x03,
+
+    // 0x04 and 0x05 are unused in datasheet
+    MAX30003_ETAG_UNUSED_4         = 0x04,
+    MAX30003_ETAG_UNUSED_5         = 0x05,
+
+    // fifo empty
+    MAX30003_ETAG_FIFO_EMPTY       = 0x06,
+
+    // fifo overflow
+    MAX30003_ETAG_FIFO_OVERFLOW    = 0x07
+} MAX30003_Etag_t;
 
 /*Create byte cmd for max30003w*/
-#define MAX30003W_CREATE_CMD(addr, rw)                                         \
-  ((uint8_t)(((addr) << 1) | ((rw) & 0x01)))
-
+#define MAX30003W_CREATE_CMD(addr, rw) ((uint8_t)(((addr) << 1) | ((rw) & 0x01)))
 
 // Write register. Returns true on success.
-bool MAX30003_WriteReg(HAL_SPI_HandleTypeDef *hspi, 
-                        GPIO_TypeDef *cs_port,
-                        uint8_t cs_pin,
-                        uint8_t reg, uint32_t data);
-// read register. Returns true on success.                     
-bool MAX30003_ReadReg(HAL_SPI_HandleTypeDef *hspi, 
-                        GPIO_TypeDef *cs_port,
-                        uint8_t cs_pin,
-                        uint8_t reg, 
-                        size_t len,
-                        uint8_t *buff);
-// restart ECG process cleanly                       
-bool MAX30003_Sync(HAL_SPI_HandleTypeDef *hspi, 
-                    uint8_t cs_pin,
-                    GPIO_TypeDef *cs_port);
+bool MAX30003_WriteReg(SPI_HandleTypeDef *hspi,
+                       GPIO_TypeDef *cs_port,
+                       uint16_t cs_pin,
+                       uint8_t reg,
+                       uint32_t data);
+
+// read register. Returns true on success.
+bool MAX30003_ReadReg(SPI_HandleTypeDef *hspi,
+                      GPIO_TypeDef *cs_port,
+                      uint16_t cs_pin,
+                      uint8_t reg,
+                      size_t len,
+                      uint8_t *buff);
+
+// restart ECG process cleanly
+bool MAX30003_Sync(SPI_HandleTypeDef *hspi,
+                   uint16_t cs_pin,
+                   GPIO_TypeDef *cs_port);
+
 // Reset max30003w. Returns true on success.
-bool MAX30003_Reset(HAL_SPI_HandleTypeDef *hspi, 
-                    uint8_t cs_pin,
+bool MAX30003_Reset(SPI_HandleTypeDef *hspi,
+                    uint16_t cs_pin,
                     GPIO_TypeDef *cs_port);
+
 // initialize max30003w
-bool MAX30003_Init(HAL_SPI_HandleTypeDef *hspi, uint8_t cs_pin,GPIO_TypeDef *cs_port);
+bool MAX30003_Init(SPI_HandleTypeDef *hspi,
+                   uint16_t cs_pin,
+                   GPIO_TypeDef *cs_port);
+
 // set sample rate
-bool MAX30003_set_sampling_rate(HAL_SPI_HandleTypeDef *hspi, 
-                                GPIO_TypeDef *cs_port, 
-                                uint8_t cs_pin,
+bool MAX30003_set_sampling_rate(SPI_HandleTypeDef *hspi,
+                                GPIO_TypeDef *cs_port,
+                                uint16_t cs_pin,
                                 SamplingRate rate);
-// Read many samples 
-bool MAX30003_read_ECGBust(HAL_SPI_HandleTypeDef *hspi, 
-                                GPIO_TypeDef *cs_port, 
-                                uint16_t count, 
-                                uint8_t cs_pin,
-                                uint8_t *out);
-// Read single ECG 24-bit signed sample. Returns true on success.
-bool MAX30003_ReadECGSample(HAL_SPI_HandleTypeDef *hspi, 
+
+// Read many samples
+bool MAX30003_read_ECGBust(SPI_HandleTypeDef *hspi,
+                           GPIO_TypeDef *cs_port,
+                           uint16_t cs_pin,
+                           uint16_t count,
+                           int32_t *out,
+                          uint16_t *valid_count);
+
+// Read single ECG 24-bit FIFO word and extract signed 18-bit sample.
+// Returns true on success.
+bool MAX30003_ReadECGSample(SPI_HandleTypeDef *hspi,
                             GPIO_TypeDef *cs_port,
-                            uint8_t cs_pin,
-                            int32_t &sample);
+                            uint16_t cs_pin,
+                            int32_t *sample);
+
 #ifdef __cplusplus
 }
 #endif
+
 #endif // MAX30003W_H

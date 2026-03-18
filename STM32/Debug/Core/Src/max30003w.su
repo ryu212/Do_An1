@@ -1,0 +1,8 @@
+../Core/Src/max30003w.c:3:6:MAX30003_WriteReg	32	static
+../Core/Src/max30003w.c:24:6:MAX30003_ReadReg	48	static
+../Core/Src/max30003w.c:56:6:MAX30003_Reset	32	static
+../Core/Src/max30003w.c:68:6:MAX30003_Sync	32	static
+../Core/Src/max30003w.c:79:6:MAX30003_Init	32	static
+../Core/Src/max30003w.c:121:6:MAX30003_set_sampling_rate	40	static
+../Core/Src/max30003w.c:158:6:MAX30003_read_ECGBust	120	dynamic
+../Core/Src/max30003w.c:224:6:MAX30003_ReadECGSample	48	static
