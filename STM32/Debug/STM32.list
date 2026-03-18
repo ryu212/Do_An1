@@ -112,10 +112,10 @@ int main(void)
  800015c:	f000 f862 	bl	8000224 <MX_SPI1_Init>
   MX_SPI2_Init();
  8000160:	f000 f896 	bl	8000290 <MX_SPI2_Init>
+  /* USER CODE BEGIN WHILE */
   while (1)
   {
     /* USER CODE END WHILE */
-
     /* USER CODE BEGIN 3 */
     HAL_GPIO_WritePin(GPIOA, GPIO_PIN_4, GPIO_PIN_RESET);
  8000164:	2200      	movs	r2, #0
