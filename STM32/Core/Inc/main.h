@@ -47,7 +47,8 @@ extern "C" {
 /* Exported macro ------------------------------------------------------------*/
 /* USER CODE BEGIN EM */
 #define LENGTH_BUFFER 360
-extern int32_t data_buffer[LENGTH_BUFFER];
+extern int32_t data_buffer1[LENGTH_BUFFER];
+extern int32_t data_buffer2[LENGTH_BUFFER];
 /* USER CODE END EM */
 
 /* Exported functions prototypes ---------------------------------------------*/

@@ -1,5 +1,14 @@
 #include "max30003w.h"
 
+static void MAX30003_Delay(uint32_t ms)
+{
+    if (osKernelGetState() == osKernelRunning) {
+        osDelay(ms);
+    } else {
+        HAL_Delay(ms);
+    }
+}
+
 bool MAX30003_WriteReg(SPI_HandleTypeDef *hspi,
                        GPIO_TypeDef *cs_port,
                        uint16_t cs_pin,
@@ -39,7 +48,7 @@ bool MAX30003_ReadReg(SPI_HandleTypeDef *hspi,
     tx_buf[0] = MAX30003W_CREATE_CMD(reg, 1);
 
     HAL_GPIO_WritePin(cs_port, cs_pin, GPIO_PIN_RESET);
-    status = HAL_SPI_TransmitReceive(hspi, tx_buf, rx_buf, (uint16_t)(len + 1), 100);
+    status = HAL_SPI_TransmitReceive(hspi, tx_buf, rx_buf, (uint16_t)(len + 1U), 100);
     HAL_GPIO_WritePin(cs_port, cs_pin, GPIO_PIN_SET);
 
     if (status != HAL_OK) {
@@ -54,20 +63,20 @@ bool MAX30003_ReadReg(SPI_HandleTypeDef *hspi,
 }
 
 bool MAX30003_Reset(SPI_HandleTypeDef *hspi,
-                    uint16_t cs_pin,
-                    GPIO_TypeDef *cs_port)
+                    GPIO_TypeDef *cs_port,
+                    uint16_t cs_pin)
 {
     if (!MAX30003_WriteReg(hspi, cs_port, cs_pin, REG_SW_RST, 0x000000)) {
         return false;
     }
 
-    HAL_Delay(10);
+    MAX30003_Delay(10);
     return true;
 }
 
 bool MAX30003_Sync(SPI_HandleTypeDef *hspi,
-                   uint16_t cs_pin,
-                   GPIO_TypeDef *cs_port)
+                   GPIO_TypeDef *cs_port,
+                   uint16_t cs_pin)
 {
     if (!MAX30003_WriteReg(hspi, cs_port, cs_pin, REG_SYNCH, 0x000000)) {
         return false;
@@ -76,52 +85,91 @@ bool MAX30003_Sync(SPI_HandleTypeDef *hspi,
     return true;
 }
 
-bool MAX30003_Init(SPI_HandleTypeDef *hspi,
-                   uint16_t cs_pin,
-                   GPIO_TypeDef *cs_port)
+bool MAX30003_FIFO_Reset(SPI_HandleTypeDef *hspi,
+                         GPIO_TypeDef *cs_port,
+                         uint16_t cs_pin)
 {
-    if (!MAX30003_Reset(hspi, cs_pin, cs_port)) {
+    if (!MAX30003_WriteReg(hspi, cs_port, cs_pin, REG_FIFO_RST, 0x000000)) {
         return false;
     }
-    HAL_Delay(50);
+
+    MAX30003_Delay(10);
+    return true;
+}
+
+bool MAX30003_Init(SPI_HandleTypeDef *hspi,
+                   GPIO_TypeDef *cs_port,
+                   uint16_t cs_pin)
+{
+    if (!MAX30003_Reset(hspi, cs_port, cs_pin)) {
+        return false;
+    }
+    MAX30003_Delay(10);
 
     if (!MAX30003_WriteReg(hspi, cs_port, cs_pin, REG_CNFG_GEN, 0x081007)) {
         return false;
     }
-    HAL_Delay(50);
+    MAX30003_Delay(10);
 
-    if (!MAX30003_WriteReg(hspi, cs_port, cs_pin, REG_CNFG_CAL, 0x720000)) {
+    // disable internal calibration source for real electrode ECG
+    if (!MAX30003_WriteReg(hspi, cs_port, cs_pin, REG_CNFG_CAL, 0x000000)) {
         return false;
     }
-    HAL_Delay(50);
+    MAX30003_Delay(10);
 
-    if (!MAX30003_WriteReg(hspi, cs_port, cs_pin, REG_CNFG_EMUX, 0x0B0000)) {
+    // normal ECG input mux path, not VCALP/VCALN
+    if (!MAX30003_WriteReg(hspi, cs_port, cs_pin, REG_CNFG_EMUX, 0x000000)) {
         return false;
     }
-    HAL_Delay(50);
+    MAX30003_Delay(10);
 
-    if (!MAX30003_WriteReg(hspi, cs_port, cs_pin, REG_CNFG_ECG, 0x005000)) {  // set 512 sps
+    // ECG config, 512 sps
+    if (!MAX30003_WriteReg(hspi, cs_port, cs_pin, REG_CNFG_ECG, 0x005000)) {
         return false;
     }
-    HAL_Delay(50);
+    MAX30003_Delay(10);
 
+    // optional RTOR block config
     if (!MAX30003_WriteReg(hspi, cs_port, cs_pin, REG_CNFG_RTOR1, 0x3FC600)) {
         return false;
     }
-    HAL_Delay(50);
+    MAX30003_Delay(10);
 
-    if (!MAX30003_Sync(hspi, cs_pin, cs_port)) {
+    // clear fifo state and resync after configuration
+    if (!MAX30003_FIFO_Reset(hspi, cs_port, cs_pin)) {
         return false;
     }
-    HAL_Delay(50);
+    MAX30003_Delay(10);
+
+    if (!MAX30003_Sync(hspi, cs_port, cs_pin)) {
+        return false;
+    }
+    if (!MAX30003_WriteReg(hspi, cs_port, cs_pin, REG_EN_INT,
+                           (1UL << 23) |   // EN_EINT
+                           (1UL << 22) |   // EN_EOVF
+                           (0x03UL)))      // INTB_TYPE = 11
+    {
+        return false;
+    }
+    MAX30003_Delay(10);
+
+    // ngưỡng FIFO interrupt
+    if (!MAX30003_WriteReg(hspi, cs_port, cs_pin, REG_MNGR_INT,
+                           (0UL << 19) |   // EFIT = 0 => 1 unread sample
+                           (1UL << 2)  |   // CLR_SAMP = 1
+                           (0UL << 0)))    // SAMP_IT = 00
+    {
+        return false;
+    }
+    MAX30003_Delay(50);
 
     return true;
 }
 
-bool MAX30003_set_sampling_rate(SPI_HandleTypeDef *hspi,
-                                GPIO_TypeDef *cs_port,
-                                uint16_t cs_pin,
-                                SamplingRate rate)
+bool MAX30003_SetSamplingRate(SPI_HandleTypeDef *hspi,
+                              GPIO_TypeDef *cs_port,
+                              uint16_t cs_pin,
+                              SamplingRate rate)
 {
     uint8_t reg[3] = {0};
 
@@ -129,8 +177,7 @@ bool MAX30003_set_sampling_rate(SPI_HandleTypeDef *hspi,
         return false;
     }
 
-    // modify bits in MSB according to rate
-    // keep other bits unchanged
+    // modify sample rate bits in the MSB and keep other bits unchanged
     reg[0] &= 0x3F;
 
     switch (rate) {
@@ -142,7 +189,6 @@ bool MAX30003_set_sampling_rate(SPI_HandleTypeDef *hspi,
             break;
         case SR_512:
         default:
-            // leave 0 for 512 sps according to current bit mapping assumption
             break;
     }
 
@@ -155,7 +201,7 @@ bool MAX30003_set_sampling_rate(SPI_HandleTypeDef *hspi,
     }
 }
 
-bool MAX30003_read_ECGBust(SPI_HandleTypeDef *hspi,
+bool MAX30003_ReadECGBurst(SPI_HandleTypeDef *hspi,
                            GPIO_TypeDef *cs_port,
                            uint16_t cs_pin,
                            uint16_t count,
@@ -199,7 +245,7 @@ bool MAX30003_read_ECGBust(SPI_HandleTypeDef *hspi,
 
         etag = (uint8_t)((value24 >> 3) & 0x07);
 
-        // skip invalid ECG samples
+        // only store valid ECG samples
         if (etag != MAX30003_ETAG_VALID &&
             etag != MAX30003_ETAG_VALID_EOF) {
             continue;
@@ -226,46 +272,56 @@ bool MAX30003_ReadECGSample(SPI_HandleTypeDef *hspi,
                             uint16_t cs_pin,
                             int32_t *sample)
 {
-    uint8_t raw[3];
-    uint32_t value24;
-    MAX30003_Etag_t etag;
+    uint8_t raw[3] = {0};
+    //int32_t value24;
+    //uint8_t etag;
     int32_t ecg_value;
-    uint8_t retry;
-    const uint8_t max_retry = 10;
+
 
     if (sample == NULL) {
         return false;
     }
 
-    for (retry = 0; retry < max_retry; retry++) {
-        if (!MAX30003_ReadReg(hspi, cs_port, cs_pin, REG_ECG_FIFO, 3, raw)) {
-            return false;
-        }
-
-        value24 = ((uint32_t)raw[0] << 16) |
-                  ((uint32_t)raw[1] << 8)  |
-                  ((uint32_t)raw[2]);
-
-        etag = (MAX30003_Etag_t)((value24 >> 3) & 0x07);
-
-        // accept only valid ECG samples
-        if (etag == MAX30003_ETAG_VALID ||
-            etag == MAX30003_ETAG_VALID_EOF) {
-
-            // extract 18-bit ECG data from bits [23:6]
-            ecg_value = (int32_t)(value24 >> 6);
-
-            // sign-extend 18-bit signed value to 32-bit
-            if (ecg_value & (1 << 17)) {
-                ecg_value |= 0xFFFC0000;
-            }
-
-            *sample = ecg_value;
-            return true;
-        }
-
-        // if fifo empty or invalid fast sample, try reading again
+    if (!MAX30003_ReadReg(hspi, cs_port, cs_pin, REG_ECG_FIFO, 3, raw)) {
+        return false;
     }
 
-    return false;
+    ecg_value = ((uint32_t)raw[0] << 16) |
+                ((uint32_t)raw[1] << 8)  |
+                (raw[2]);
+    if (ecg_value & 0x800000) ecg_value |= 0xFF000000;
+    *sample = ecg_value;
+    return true;
+    // value24 = ((uint32_t)raw[0] << 16) |
+    //           ((uint32_t)raw[1] << 8)  |
+    //           ((uint32_t)raw[2]);
+
+    // etag = (uint8_t)((value24 >> 3) & 0x07);
+    // // printf("raw = %02X %02X %02X, etag = %u\r\n", raw[0], raw[1], raw[2], etag);
+
+    // //fifo overflow: clear fifo and resync before returning
+    // if (etag == MAX30003_ETAG_FIFO_OVERFLOW) {
+    //     MAX30003_FIFO_Reset(hspi, cs_port, cs_pin);
+    //     MAX30003_Sync(hspi, cs_port, cs_pin);
+    //     return false;
+    // }
+
+    // // skip non-valid sample types
+    // if (etag == MAX30003_ETAG_FIFO_EMPTY ||
+    //     etag == MAX30003_ETAG_FAST ||
+    //     etag == MAX30003_ETAG_FAST_EOF ||
+    //     etag == MAX30003_ETAG_UNUSED_4 ||
+    //     etag == MAX30003_ETAG_UNUSED_5) {
+    //     return false;
+    // }
+
+    // // extract 18-bit ECG data from bits [23:6]
+    // ecg_value = (int32_t)(value24 >> 6);
+
+    // // sign-extend 18-bit signed value to 32-bit
+    // if (ecg_value & (1 << 17)) {
+    //     ecg_value |= 0xFFFC0000;
+    // }
+    // *sample = ecg_value;
+    // return true;
 }

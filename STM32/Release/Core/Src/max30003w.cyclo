@@ -1,0 +1,9 @@
+../Core/Src/max30003w.c:3:13:MAX30003_Delay	2
+../Core/Src/max30003w.c:12:6:MAX30003_WriteReg	1
+../Core/Src/max30003w.c:33:6:MAX30003_ReadReg	4
+../Core/Src/max30003w.c:65:6:MAX30003_Reset	2
+../Core/Src/max30003w.c:77:6:MAX30003_Sync	1
+../Core/Src/max30003w.c:88:6:MAX30003_Init	8
+../Core/Src/max30003w.c:130:6:MAX30003_set_sampling_rate	4
+../Core/Src/max30003w.c:167:6:MAX30003_read_ECGBust	9
+../Core/Src/max30003w.c:233:6:MAX30003_ReadECGSample	6
