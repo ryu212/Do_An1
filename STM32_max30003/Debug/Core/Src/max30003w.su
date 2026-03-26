@@ -1,0 +1,5 @@
+../Core/Src/max30003w.c:5:13:max30003_cs_low	16	static
+../Core/Src/max30003w.c:10:13:max30003_cs_high	16	static
+../Core/Src/max30003w.c:16:6:max30003_init	24	static
+../Core/Src/max30003w.c:31:19:max30003_readRegister	40	static
+../Core/Src/max30003w.c:87:19:max30003_writeRegister	32	static

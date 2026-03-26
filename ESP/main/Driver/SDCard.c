@@ -206,3 +206,104 @@ esp_err_t sd_card_delete(const char *filename){
     }
     return ESP_OK;
 }
+// read data from a file on SD card
+esp_err_t sd_card_read(const char *filename, uint8_t *buffer, size_t size){
+    if (filename == NULL || buffer == NULL) {
+        ESP_LOGE(TAG, "Invalid argument: filename or buffer is NULL");
+        return ESP_ERR_INVALID_ARG;
+    }
+    if (!sd_mounted) {
+        ESP_LOGW(TAG, "SD card not mounted");
+        return ESP_ERR_INVALID_STATE;
+    }
+
+    FILE *file = fopen(filename, "rb");
+    if (file == NULL) {
+        ESP_LOGE(TAG, "Failed to open file for reading: %s", filename);
+        return ESP_ERR_NOT_FOUND;
+    }
+
+    // read at most the exact number of bytes requested by the function
+    size_t read_bytes = fread(buffer, 1, size, file);
+    fclose(file);
+
+    // if fewer bytes were read than requested, check whether it was a read error
+    // or simply because the file is shorter than the requested size
+    if (read_bytes < size) {
+        struct stat st;
+        if (stat(filename, &st) != 0) {
+            ESP_LOGE(TAG, "Failed to stat file after reading: %s", filename);
+            return ESP_FAIL;
+        }
+
+        // if the file still has enough data but fread read less than requested,
+        // then treat it as a read failure
+        if ((size_t)st.st_size >= size) {
+            ESP_LOGE(TAG, "Failed to read all requested data from file: %s", filename);
+            return ESP_FAIL;
+        }
+    }
+
+    return ESP_OK;
+}
+
+// create a directory on SD card
+esp_err_t sd_card_create_dir(const char *dirname){
+    if (dirname == NULL) {
+        ESP_LOGE(TAG, "Invalid argument: dirname is NULL");
+        return ESP_ERR_INVALID_ARG;
+    }
+    if (!sd_mounted) {
+        ESP_LOGW(TAG, "SD card not mounted");
+        return ESP_ERR_INVALID_STATE;
+    }
+
+    // if the directory already exists, do not treat it as an error
+    struct stat st;
+    if (stat(dirname, &st) == 0) {
+        if (S_ISDIR(st.st_mode)) {
+            return ESP_OK;
+        }
+        ESP_LOGE(TAG, "Path exists but is not a directory: %s", dirname);
+        return ESP_FAIL;
+    }
+
+    // create the directory with normal read/write permissions
+    if (mkdir(dirname, 0775) != 0) {
+        ESP_LOGE(TAG, "Failed to create directory: %s", dirname);
+        return ESP_FAIL;
+    }
+
+    return ESP_OK;
+}
+
+// delete a directory on SD card
+esp_err_t sd_card_delete_dir(const char *dirname){
+    if (dirname == NULL) {
+        ESP_LOGE(TAG, "Invalid argument: dirname is NULL");
+        return ESP_ERR_INVALID_ARG;
+    }
+    if (!sd_mounted) {
+        ESP_LOGW(TAG, "SD card not mounted");
+        return ESP_ERR_INVALID_STATE;
+    }
+
+    struct stat st;
+    if (stat(dirname, &st) != 0) {
+        ESP_LOGE(TAG, "Directory not found: %s", dirname);
+        return ESP_ERR_NOT_FOUND;
+    }
+    if (!S_ISDIR(st.st_mode)) {
+        ESP_LOGE(TAG, "Path is not a directory: %s", dirname);
+        return ESP_ERR_INVALID_ARG;
+    }
+
+    // only remove an empty directory to avoid adding recursive delete logic
+    // beyond the current requirement
+    if (rmdir(dirname) != 0) {
+        ESP_LOGE(TAG, "Failed to delete directory: %s", dirname);
+        return ESP_FAIL;
+    }
+
+    return ESP_OK;
+}

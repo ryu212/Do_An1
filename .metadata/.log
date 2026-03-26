@@ -1,23 +1,74 @@
-!SESSION 2026-03-18 16:11:08.068 -----------------------------------------------
+!SESSION 2026-03-25 10:56:16.646 -----------------------------------------------
 eclipse.buildId=Version 2.0.0
 java.version=21.0.8
 java.vendor=Eclipse Adoptium
 BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
 Command-line arguments:  -os win32 -ws win32 -arch x86_64
 
-!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2026-03-18 16:11:13.966
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2026-03-25 10:56:37.812
 !MESSAGE Log4j2 initialized with config file D:\MonHoc_HK6\ECG_wireless\.metadata\.log4j2.xml
 
-!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2026-03-18 16:11:16.684
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2026-03-25 10:56:41.326
 !MESSAGE Started RMI Server, listening on port 41337
 
-!ENTRY com.st.stm32cube.ide.mpu.remote.serial 1 1 2026-03-18 16:11:17.132
+!ENTRY com.st.stm32cube.ide.mpu.remote.serial 1 1 2026-03-25 10:56:42.946
 !MESSAGE Executed PowerShell command powershell.exe -Command "Get-CimInstance -ClassName Win32_SerialPort | Select-Object -ExpandProperty DeviceID":
-COM5
 
 
-!ENTRY com.st.stm32cube.ide.mpu.remote.serial 1 1 2026-03-18 16:11:17.132
-!MESSAGE port: COM5
+!ENTRY com.st.stm32cube.ide.mpu.remote.serial 1 1 2026-03-25 10:56:42.948
+!MESSAGE port: 
 
-!ENTRY org.eclipse.cdt.core 1 0 2026-03-18 16:12:31.726
-!MESSAGE Indexed 'STM32' (19 sources, 108 headers) in 1.99 sec: 7,701 declarations; 30,604 references; 2 unresolved inclusions; 36 syntax errors; 188 unresolved names (0.49%)
+!ENTRY org.eclipse.cdt.core 1 0 2026-03-25 10:57:22.244
+!MESSAGE Indexed 'STM3_ad8232' (516 sources, 309 headers) in 6.66 sec: 38,435 declarations; 354,458 references; 19 unresolved inclusions; 256 syntax errors; 5,582 unresolved names (1.4%)
+!SESSION 2026-03-25 11:58:55.992 -----------------------------------------------
+eclipse.buildId=Version 2.0.0
+java.version=21.0.8
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2026-03-25 11:59:02.678
+!MESSAGE Log4j2 initialized with config file D:\MonHoc_HK6\ECG_wireless\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2026-03-25 11:59:07.309
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY com.st.stm32cube.ide.mpu.remote.serial 1 1 2026-03-25 11:59:07.710
+!MESSAGE Executed PowerShell command powershell.exe -Command "Get-CimInstance -ClassName Win32_SerialPort | Select-Object -ExpandProperty DeviceID":
+
+
+!ENTRY com.st.stm32cube.ide.mpu.remote.serial 1 1 2026-03-25 11:59:07.711
+!MESSAGE port: 
+
+!ENTRY org.eclipse.cdt.core 1 0 2026-03-25 12:00:02.019
+!MESSAGE Indexed 'STM3_ad8232' (516 sources, 310 headers) in 7.48 sec: 38,444 declarations; 354,544 references; 19 unresolved inclusions; 258 syntax errors; 5,583 unresolved names (1.4%)
+!SESSION 2026-03-26 23:55:23.510 -----------------------------------------------
+eclipse.buildId=Version 2.0.0
+java.version=21.0.8
+java.vendor=Eclipse Adoptium
+BootLoader constants: OS=win32, ARCH=x86_64, WS=win32, NL=en_US
+Command-line arguments:  -os win32 -ws win32 -arch x86_64
+
+!ENTRY com.st.stm32cube.ide.mcu.informationcenter 1 1 2026-03-26 23:55:45.608
+!MESSAGE Log4j2 initialized with config file D:\MonHoc_HK6\ECG_wireless\.metadata\.log4j2.xml
+
+!ENTRY com.st.stm32cube.ide.mcu.ide 1 1 2026-03-26 23:55:51.486
+!MESSAGE Started RMI Server, listening on port 41337
+
+!ENTRY com.st.stm32cube.ide.mpu.remote.serial 1 1 2026-03-26 23:55:52.073
+!MESSAGE Executed PowerShell command powershell.exe -Command "Get-CimInstance -ClassName Win32_SerialPort | Select-Object -ExpandProperty DeviceID":
+
+
+!ENTRY com.st.stm32cube.ide.mpu.remote.serial 1 1 2026-03-26 23:55:52.074
+!MESSAGE port: 
+
+!ENTRY com.st.stm32cube.ide.mpu.remote.serial 1 1 2026-03-27 00:06:26.748
+!MESSAGE Executed PowerShell command powershell.exe -Command "Get-CimInstance -ClassName Win32_SerialPort | Select-Object -ExpandProperty DeviceID":
+COM3
+
+
+!ENTRY com.st.stm32cube.ide.mpu.remote.serial 1 1 2026-03-27 00:06:26.749
+!MESSAGE port: COM3
+
+!ENTRY org.eclipse.cdt.dsf 4 10005 2026-03-27 00:20:20.223
+!MESSAGE Request for monitor: 'RequestMonitor (org.eclipse.cdt.dsf.gdb.internal.ui.actions.DsfTerminateCommand$3$1@6749d180): Status OK: unknown code=0 OK' resulted in a rejected execution exception.

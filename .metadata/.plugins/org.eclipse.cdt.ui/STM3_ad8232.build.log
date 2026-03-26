@@ -1,0 +1,29 @@
+00:48:19 **** Incremental Build of configuration Debug for project STM3_ad8232 ****
+make -j12 all 
+arm-none-eabi-gcc "../Core/Src/main.c" -mcpu=cortex-m3 -std=gnu11 -g3 -DDEBUG -DUSE_HAL_DRIVER -DSTM32F103xB -c -I../Core/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc -I../Drivers/STM32F1xx_HAL_Driver/Inc/Legacy -I../Drivers/CMSIS/Device/ST/STM32F1xx/Include -I../Drivers/CMSIS/Include -I../Drivers/CMSIS/DSP/Include -I../Drivers/CMSIS/NN/Include -I../Drivers/CMSIS/RTOS2/Include -O0 -ffunction-sections -fdata-sections -Wall -fstack-usage -fcyclomatic-complexity -MMD -MP -MF"Core/Src/main.d" -MT"Core/Src/main.o" --specs=nano.specs -mfloat-abi=soft -mthumb -o "Core/Src/main.o"
+../Core/Src/main.c: In function 'main':
+../Core/Src/main.c:130:3: warning: implicit declaration of function 'printf' [-Wimplicit-function-declaration]
+  130 |   printf("Started....\n");
+      |   ^~~~~~
+../Core/Src/main.c:25:1: note: include '<stdio.h>' or provide a declaration of 'printf'
+   24 | #include "stdbool.h"
+  +++ |+#include <stdio.h>
+   25 | /* USER CODE END Includes */
+../Core/Src/main.c:130:3: warning: incompatible implicit declaration of built-in function 'printf' [-Wbuiltin-declaration-mismatch]
+  130 |   printf("Started....\n");
+      |   ^~~~~~
+../Core/Src/main.c:130:3: note: include '<stdio.h>' or provide a declaration of 'printf'
+arm-none-eabi-gcc -o "STM3_ad8232.elf" @"objects.list"   -mcpu=cortex-m3 -T"D:\MonHoc_HK6\ECG_wireless\STM3_ad8232\STM32F103C8TX_FLASH.ld" --specs=nosys.specs -Wl,-Map="STM3_ad8232.map" -Wl,--gc-sections -static --specs=nano.specs -mfloat-abi=soft -mthumb -Wl,--start-group -lc -lm -Wl,--end-group
+Finished building target: STM3_ad8232.elf
+ 
+arm-none-eabi-size  STM3_ad8232.elf 
+arm-none-eabi-objdump -h -S STM3_ad8232.elf  > "STM3_ad8232.list"
+   text	   data	    bss	    dec	    hex	filename
+  16296	    104	   2976	  19376	   4bb0	STM3_ad8232.elf
+Finished building: default.size.stdout
+ 
+Finished building: STM3_ad8232.list
+ 
+
+00:48:19 Build Finished. 0 errors, 2 warnings. (took 614ms)
+

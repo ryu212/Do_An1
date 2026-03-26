@@ -20,6 +20,10 @@ extern "C" {
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/unistd.h>
+#include <unistd.h>
+#include <dirent.h>
+#include <errno.h>
+#include <sys/types.h>
 
 #include "driver/spi_common.h"
 #include "driver/sdspi_host.h"
@@ -64,8 +68,8 @@ esp_err_t sd_card_append(const char *filename, const uint8_t *data, size_t size)
 // overwrite a file on SD card
 esp_err_t sd_card_overwrite(const char *filename, const uint8_t *data, size_t size);
 
-// // read data from a file on SD card
-// esp_err_t sd_card_read(const char *filename, uint8_t *buffer, size_t size);
+// read data from a file on SD card
+esp_err_t sd_card_read(const char *filename, uint8_t *buffer, size_t size);
 
 //check if file exists on SD card
 bool sd_card_file_exists(const char *filename);
@@ -73,11 +77,11 @@ bool sd_card_file_exists(const char *filename);
 // delete a file on SD card
 esp_err_t sd_card_delete(const char *filename);
 
-// // create a directory on SD card
-// esp_err_t sd_card_create_dir(const char *dirname);
+// create a directory on SD card
+esp_err_t sd_card_create_dir(const char *dirname);
 
-// // delete a directory on SD card
-// esp_err_t sd_card_delete_dir(const char *dirname);
+// delete a directory on SD card
+esp_err_t sd_card_delete_dir(const char *dirname);
 
 #ifdef __cplusplus
 }

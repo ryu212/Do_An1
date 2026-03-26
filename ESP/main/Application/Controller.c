@@ -1,7 +1,7 @@
 #include "Controller.h"
 
-float received_signal[LENGHT_BUFFER] = {0};
-char *create_json_two_arrays(float *arr1, float *arr2) {
+int32_t received_signal[LENGHT_BUFFER] = {0};
+char *create_json_two_arrays(int32_t *arr1, int32_t *arr2) {
     cJSON *root = cJSON_CreateObject();
     cJSON *input1 = cJSON_AddArrayToObject(root, "input1");
     cJSON *input2 = cJSON_AddArrayToObject(root, "input2");
@@ -16,7 +16,7 @@ char *create_json_two_arrays(float *arr1, float *arr2) {
     return json_str;     // phải free() sau khi dùng
 }
 
-char *create_json_one_arrays(float *arr)
+char *create_json_one_arrays(int32_t *arr)
 {
     cJSON *root = cJSON_CreateObject();
     cJSON *input1 = cJSON_AddArrayToObject(root, "input1");
@@ -59,7 +59,7 @@ and hold until received 10 batch in queue, storing into mem card
 */
 void write_SD_card_task(void *arg)
 {
-    float sd_batch[10][360];
+    int32_t sd_batch[10][360];
     int batch_count = 0;
     char filename[64];
 

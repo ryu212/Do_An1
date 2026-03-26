@@ -1,7 +1,7 @@
 {
     "version":            "1.2",
     "project_name":       ".",
-    "project_version":    "3ba521c-dirty",
+    "project_version":    "f3a7ca4-dirty",
     "project_path":       "D:/MonHoc_HK6/ECG_wireless/ESP",
     "idf_path":           "C:/Espressif/frameworks/esp-idf-v5.5.2",
     "build_dir":          "D:/MonHoc_HK6/ECG_wireless/ESP/build",

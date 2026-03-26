@@ -16,10 +16,10 @@ extern "C" {
 
 
 #define LENGHT_BUFFER 360
-extern float received_signal[LENGHT_BUFFER];
+extern int32_t received_signal[LENGHT_BUFFER];
 
-char *create_json_two_arrays(float *arr1, float *arr2);
-char *create_json_one_arrays(float *arr);
+char *create_json_two_arrays(int32_t *arr1, int32_t *arr2);
+char *create_json_one_arrays(int32_t *arr);
 void get_daily_filename(char *filename, size_t len);
 void mqtt_task(void* arg);
 void write_SD_card_task(void *arg);
