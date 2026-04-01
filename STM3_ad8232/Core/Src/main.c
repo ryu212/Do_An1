@@ -54,9 +54,13 @@ SPI_HandleTypeDef hspi1;
 TIM_HandleTypeDef htim3;
 
 UART_HandleTypeDef huart1;
+UART_HandleTypeDef huart2;
 
 /* USER CODE BEGIN PV */
 
+JDY23_HandleTypeDef hjdy;   
+uint8_t single_byte;
+bool flag_send_data = false;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -67,8 +71,9 @@ static void MX_ADC1_Init(void);
 static void MX_SPI1_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_USART1_UART_Init(void);
+static void MX_USART2_UART_Init(void);
 /* USER CODE BEGIN PFP */
-
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 /* USER CODE END PFP */
 
 /* Private user code ---------------------------------------------------------*/
@@ -134,12 +139,45 @@ int main(void)
   MX_SPI1_Init();
   MX_TIM3_Init();
   MX_USART1_UART_Init();
+  MX_USART2_UART_Init();
   /* USER CODE BEGIN 2 */
   printf("Started....\n");
-  HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_SET); // set css
-  HAL_TIM_Base_Start(&htim3); // start timer3
-  clear_buffer(dma_buffer);
-  HAL_ADC_Start_DMA(&hadc1, (uint32_t*)dma_buffer, 2*BUFFER_SIZE); // start adc
+  for (int i = 0; i < 2*BUFFER_SIZE; i++){
+    dma_buffer[i] = 166;
+  }
+  // test JDY23
+  // uint8_t tx[] = "AT\r\n";
+  // uint8_t rx[32] = {0};
+
+  // HAL_UART_Transmit(&huart2, tx, sizeof(tx) - 1, 100);
+  // HAL_UART_Receive(&huart2, rx, sizeof(rx) - 1, 500);
+
+  // printf("RX = %s\r\n", rx);
+  JDY23_Result ret;
+
+  printf("Started....\r\n");
+
+  jdy23_init(&hjdy, &huart2, NULL, 0, 0);
+  HAL_Delay(500);
+  HAL_UART_Receive_IT(&huart2, &single_byte, 1);
+  ret = JDY23_SetName(&hjdy, "TEST_JDY23");
+  printf("after SetName ret=%d\r\n", ret);
+  ret = JDY23_GetName(&hjdy, hjdy.massage_buffer, sizeof(hjdy.massage_buffer));
+  printf("after GetName ret=%d, name=%s\r\n", ret, hjdy.massage_buffer);
+  ret = jdy23_get_mac(&hjdy, hjdy.massage_buffer, sizeof(hjdy.massage_buffer));
+  printf("after GetMAC ret=%d, mac=%s\r\n", ret, hjdy.massage_buffer);
+  ret = jdy23_set_adv_interval(&hjdy, JDY23_ADVIN_1000MS);
+  printf("after SetAdvInterval ret=%d\r\n", ret);
+  ret = jdy23_turn_off_led(&hjdy);
+  printf("after TurnOffLED ret=%d\r\n", ret);
+  ret = jdy23_set_start_mode(&hjdy, JDY23_START_WAKE);
+  printf("after SetStartMode ret=%d\r\n", ret);
+  ret = jdy23_sleep(&hjdy, JDY23_SLEEP_LIGHT);
+  printf("after Sleep ret=%d\r\n", ret);
+  // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_SET); // set css
+  // HAL_TIM_Base_Start(&htim3); // start timer3
+  // clear_buffer(dma_buffer);
+  // HAL_ADC_Start_DMA(&hadc1, (uint32_t*)dma_buffer, 2*BUFFER_SIZE); // start adc
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -149,21 +187,33 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    if (bufferA_ready)
-    {
-      bufferA_ready = false;
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_RESET);
-      HAL_SPI_Transmit(&hspi1, (uint8_t*)&dma_buffer[0], BUFFER_SIZE * 2, HAL_MAX_DELAY);
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_SET);
+    if(flag_send_data){
+      flag_send_data = false;
+      char small_buffer[32];
+      int len = 0;
+      HAL_UART_Transmit(&huart2, (uint8_t*)"START:", 6, 10);
+      for(int i=0; i< 2*BUFFER_SIZE; i++) {
+          len = snprintf(small_buffer, sizeof(small_buffer), "%u,", dma_buffer[i]);
+          HAL_UART_Transmit(&huart2, (uint8_t*)small_buffer, len, 10);
+          if (i % 20 == 0) HAL_Delay(1);
+      }
+      HAL_UART_Transmit(&huart2, (uint8_t*)"END\r\n", 5, 10);
     }
+    // if (bufferA_ready)
+    // {
+    //   bufferA_ready = false;
+    //   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_RESET);
+    //   HAL_SPI_Transmit(&hspi1, (uint8_t*)&dma_buffer[0], BUFFER_SIZE * 2, HAL_MAX_DELAY);
+    //   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_SET);
+    // }
 
-    if (bufferB_ready)
-    {
-      bufferB_ready = false;
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_RESET);
-      HAL_SPI_Transmit(&hspi1, (uint8_t*)&dma_buffer[BUFFER_SIZE], BUFFER_SIZE * 2, HAL_MAX_DELAY);
-      HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_SET);
-    }
+    // if (bufferB_ready)
+    // {
+    //   bufferB_ready = false;
+    //   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_RESET);
+    //   HAL_SPI_Transmit(&hspi1, (uint8_t*)&dma_buffer[BUFFER_SIZE], BUFFER_SIZE * 2, HAL_MAX_DELAY);
+    //   HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_SET);
+    // }
   }
   /* USER CODE END 3 */
 }
@@ -377,6 +427,39 @@ static void MX_USART1_UART_Init(void)
 }
 
 /**
+  * @brief USART2 Initialization Function
+  * @param None
+  * @retval None
+  */
+static void MX_USART2_UART_Init(void)
+{
+
+  /* USER CODE BEGIN USART2_Init 0 */
+
+  /* USER CODE END USART2_Init 0 */
+
+  /* USER CODE BEGIN USART2_Init 1 */
+
+  /* USER CODE END USART2_Init 1 */
+  huart2.Instance = USART2;
+  huart2.Init.BaudRate = 9600;
+  huart2.Init.WordLength = UART_WORDLENGTH_8B;
+  huart2.Init.StopBits = UART_STOPBITS_1;
+  huart2.Init.Parity = UART_PARITY_NONE;
+  huart2.Init.Mode = UART_MODE_TX_RX;
+  huart2.Init.HwFlowCtl = UART_HWCONTROL_NONE;
+  huart2.Init.OverSampling = UART_OVERSAMPLING_16;
+  if (HAL_UART_Init(&huart2) != HAL_OK)
+  {
+    Error_Handler();
+  }
+  /* USER CODE BEGIN USART2_Init 2 */
+
+  /* USER CODE END USART2_Init 2 */
+
+}
+
+/**
   * Enable DMA controller clock
   */
 static void MX_DMA_Init(void)
@@ -410,10 +493,29 @@ static void MX_GPIO_Init(void)
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
   /* USER CODE END MX_GPIO_Init_2 */
-}
+} 
 
 /* USER CODE BEGIN 4 */
-
+void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
+{
+    if (huart->Instance == USART2)
+    {
+        if (hjdy.rx_index < (JDY23_MAX_RESPONSE_LEN - 1U))
+        {
+            hjdy.massage_buffer[hjdy.rx_index++] = (char)single_byte;
+            hjdy.massage_buffer[hjdy.rx_index] = '\0';
+        }
+        if (single_byte == '\n')
+        {
+            hjdy.response_complete = true;
+        }
+        if (single_byte == 'S')
+        {
+            flag_send_data = true;
+        }
+        HAL_UART_Receive_IT(&huart2, &single_byte, 1);
+    }
+}
 /* USER CODE END 4 */
 
 /**
