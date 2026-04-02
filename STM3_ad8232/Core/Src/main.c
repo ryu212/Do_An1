@@ -189,15 +189,7 @@ int main(void)
     /* USER CODE BEGIN 3 */
     if(flag_send_data){
       flag_send_data = false;
-      char small_buffer[32];
-      int len = 0;
-      HAL_UART_Transmit(&huart2, (uint8_t*)"START:", 6, 10);
-      for(int i=0; i< 2*BUFFER_SIZE; i++) {
-          len = snprintf(small_buffer, sizeof(small_buffer), "%u,", dma_buffer[i]);
-          HAL_UART_Transmit(&huart2, (uint8_t*)small_buffer, len, 10);
-          if (i % 20 == 0) HAL_Delay(1);
-      }
-      HAL_UART_Transmit(&huart2, (uint8_t*)"END\r\n", 5, 10);
+      jdy23_write(&hjdy, (uint8_t*)dma_buffer, BUFFER_SIZE* 4);
     }
     // if (bufferA_ready)
     // {
