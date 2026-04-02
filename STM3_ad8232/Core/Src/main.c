@@ -61,6 +61,7 @@ UART_HandleTypeDef huart2;
 JDY23_HandleTypeDef hjdy;   
 uint8_t single_byte;
 bool flag_send_data = false;
+bool jdy23_is_sleeping = false;
 /* USER CODE END PV */
 
 /* Private function prototypes -----------------------------------------------*/
@@ -83,25 +84,34 @@ PUTCHAR_PROTOTYPE{
 	  return ch;
 }
 
-void clear_buffer(uint16_t *ecg_buffer){
-  for (int i = 0; i < 2*BUFFER_SIZE; i++){
-    ecg_buffer[i] = 0;
+void ensure_sleep(void){
+  if (!jdy23_is_sleeping){
+      jdy23_sleep(&hjdy, JDY23_SLEEP_LIGHT);
+      jdy23_is_sleeping = true;
   }
 }
-void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
-{
-    if (hadc->Instance == ADC1)
-    {
-        bufferB_ready = true;
-    }
+void ensure_wake(void){
+    jdy23_is_sleeping = false;
 }
-void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc)
-{
-    if (hadc->Instance == ADC1)
-    {
-        bufferA_ready = true;
-    }
-}
+// void clear_buffer(uint16_t *ecg_buffer){
+//   for (int i = 0; i < 2*BUFFER_SIZE; i++){
+//     ecg_buffer[i] = 0;
+//   }
+// }
+// void HAL_ADC_ConvCpltCallback(ADC_HandleTypeDef *hadc)
+// {
+//     if (hadc->Instance == ADC1)
+//     {
+//         bufferB_ready = true;
+//     }
+// }
+// void HAL_ADC_ConvHalfCpltCallback(ADC_HandleTypeDef *hadc)
+// {
+//     if (hadc->Instance == ADC1)
+//     {
+//         bufferA_ready = true;
+//     }
+// }
 
 /* USER CODE END 0 */
 
@@ -172,8 +182,7 @@ int main(void)
   printf("after TurnOffLED ret=%d\r\n", ret);
   ret = jdy23_set_start_mode(&hjdy, JDY23_START_WAKE);
   printf("after SetStartMode ret=%d\r\n", ret);
-  ret = jdy23_sleep(&hjdy, JDY23_SLEEP_LIGHT);
-  printf("after Sleep ret=%d\r\n", ret);
+  JDY23_LinkStatus status; 
   // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_SET); // set css
   // HAL_TIM_Base_Start(&htim3); // start timer3
   // clear_buffer(dma_buffer);
@@ -187,9 +196,17 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    if(flag_send_data){
-      flag_send_data = false;
-      jdy23_write(&hjdy, (uint8_t*)dma_buffer, BUFFER_SIZE* 4);
+    if (jdy23_get_link_status(&hjdy, &status) == JDY23_OK && status == JDY23_LINK_CONNECTED) {
+        printf("Device connected!\r\n");
+        ensure_wake();
+        if(flag_send_data){
+          flag_send_data = false;
+          jdy23_write(&hjdy, (uint8_t*)dma_buffer, BUFFER_SIZE* 4);
+      }
+    }
+    else{
+      ensure_sleep();
+      HAL_Delay(5);
     }
     // if (bufferA_ready)
     // {
@@ -500,10 +517,7 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
         if (single_byte == '\n')
         {
             hjdy.response_complete = true;
-        }
-        if (single_byte == 'S')
-        {
-            flag_send_data = true;
+            if (strstr(hjdy.massage_buffer, "S") != NULL) flag_send_data = true;
         }
         HAL_UART_Receive_IT(&huart2, &single_byte, 1);
     }
