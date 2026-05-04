@@ -18,10 +18,14 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
+#include "cmsis_os.h"
+#include "fatfs.h"
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdbool.h"
+#include "SDCard.h"
+#include "JDY23.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -50,12 +54,21 @@ ADC_HandleTypeDef hadc1;
 DMA_HandleTypeDef hdma_adc1;
 
 SPI_HandleTypeDef hspi1;
+DMA_HandleTypeDef hdma_spi1_rx;
+DMA_HandleTypeDef hdma_spi1_tx;
 
 TIM_HandleTypeDef htim3;
 
 UART_HandleTypeDef huart1;
 UART_HandleTypeDef huart2;
 
+/* Definitions for defaultTask */
+osThreadId_t defaultTaskHandle;
+const osThreadAttr_t defaultTask_attributes = {
+  .name = "defaultTask",
+  .stack_size = 512 * 4,
+  .priority = (osPriority_t) osPriorityNormal,
+};
 /* USER CODE BEGIN PV */
 
 JDY23_HandleTypeDef hjdy;   
@@ -73,6 +86,8 @@ static void MX_SPI1_Init(void);
 static void MX_TIM3_Init(void);
 static void MX_USART1_UART_Init(void);
 static void MX_USART2_UART_Init(void);
+void StartDefaultTask(void *argument);
+
 /* USER CODE BEGIN PFP */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart);
 /* USER CODE END PFP */
@@ -86,8 +101,10 @@ PUTCHAR_PROTOTYPE{
 
 void ensure_sleep(void){
   if (!jdy23_is_sleeping){
-      jdy23_sleep(&hjdy, JDY23_SLEEP_LIGHT);
-      jdy23_is_sleeping = true;
+      if(jdy23_sleep(&hjdy, JDY23_SLEEP_LIGHT) == JDY23_OK){
+          printf("Be sleeped");
+          jdy23_is_sleeping = true;
+      }
   }
 }
 void ensure_wake(void){
@@ -150,44 +167,46 @@ int main(void)
   MX_TIM3_Init();
   MX_USART1_UART_Init();
   MX_USART2_UART_Init();
+  MX_FATFS_Init();
   /* USER CODE BEGIN 2 */
-  printf("Started....\n");
-  for (int i = 0; i < 2*BUFFER_SIZE; i++){
-    dma_buffer[i] = 166;
-  }
-  // test JDY23
-  // uint8_t tx[] = "AT\r\n";
-  // uint8_t rx[32] = {0};
 
-  // HAL_UART_Transmit(&huart2, tx, sizeof(tx) - 1, 100);
-  // HAL_UART_Receive(&huart2, rx, sizeof(rx) - 1, 500);
-
-  // printf("RX = %s\r\n", rx);
-  JDY23_Result ret;
-
-  printf("Started....\r\n");
-
-  jdy23_init(&hjdy, &huart2, NULL, 0, 0);
-  HAL_Delay(500);
-  HAL_UART_Receive_IT(&huart2, &single_byte, 1);
-  ret = JDY23_SetName(&hjdy, "TEST_JDY23");
-  printf("after SetName ret=%d\r\n", ret);
-  ret = JDY23_GetName(&hjdy, hjdy.massage_buffer, sizeof(hjdy.massage_buffer));
-  printf("after GetName ret=%d, name=%s\r\n", ret, hjdy.massage_buffer);
-  ret = jdy23_get_mac(&hjdy, hjdy.massage_buffer, sizeof(hjdy.massage_buffer));
-  printf("after GetMAC ret=%d, mac=%s\r\n", ret, hjdy.massage_buffer);
-  ret = jdy23_set_adv_interval(&hjdy, JDY23_ADVIN_1000MS);
-  printf("after SetAdvInterval ret=%d\r\n", ret);
-  ret = jdy23_turn_off_led(&hjdy);
-  printf("after TurnOffLED ret=%d\r\n", ret);
-  ret = jdy23_set_start_mode(&hjdy, JDY23_START_WAKE);
-  printf("after SetStartMode ret=%d\r\n", ret);
-  JDY23_LinkStatus status; 
-  // HAL_GPIO_WritePin(GPIOB, GPIO_PIN_4, GPIO_PIN_SET); // set css
-  // HAL_TIM_Base_Start(&htim3); // start timer3
-  // clear_buffer(dma_buffer);
-  // HAL_ADC_Start_DMA(&hadc1, (uint32_t*)dma_buffer, 2*BUFFER_SIZE); // start adc
   /* USER CODE END 2 */
+
+  /* Init scheduler */
+  osKernelInitialize();
+
+  /* USER CODE BEGIN RTOS_MUTEX */
+  /* add mutexes, ... */
+  /* USER CODE END RTOS_MUTEX */
+
+  /* USER CODE BEGIN RTOS_SEMAPHORES */
+  /* add semaphores, ... */
+  /* USER CODE END RTOS_SEMAPHORES */
+
+  /* USER CODE BEGIN RTOS_TIMERS */
+  /* start timers, add new ones, ... */
+  /* USER CODE END RTOS_TIMERS */
+
+  /* USER CODE BEGIN RTOS_QUEUES */
+  /* add queues, ... */
+  /* USER CODE END RTOS_QUEUES */
+
+  /* Create the thread(s) */
+  /* creation of defaultTask */
+  defaultTaskHandle = osThreadNew(StartDefaultTask, NULL, &defaultTask_attributes);
+
+  /* USER CODE BEGIN RTOS_THREADS */
+  /* add threads, ... */
+  /* USER CODE END RTOS_THREADS */
+
+  /* USER CODE BEGIN RTOS_EVENTS */
+  /* add events, ... */
+  /* USER CODE END RTOS_EVENTS */
+
+  /* Start scheduler */
+  osKernelStart();
+
+  /* We should never get here as control is now taken by the scheduler */
 
   /* Infinite loop */
   /* USER CODE BEGIN WHILE */
@@ -196,18 +215,18 @@ int main(void)
     /* USER CODE END WHILE */
 
     /* USER CODE BEGIN 3 */
-    if (jdy23_get_link_status(&hjdy, &status) == JDY23_OK && status == JDY23_LINK_CONNECTED) {
-        printf("Device connected!\r\n");
-        ensure_wake();
-        if(flag_send_data){
-          flag_send_data = false;
-          jdy23_write(&hjdy, (uint8_t*)dma_buffer, BUFFER_SIZE* 4);
-      }
-    }
-    else{
-      ensure_sleep();
-      HAL_Delay(5);
-    }
+    // if (jdy23_get_link_status(&hjdy, &status) == JDY23_OK && status == JDY23_LINK_CONNECTED) {
+    //     printf("Device connected!\r\n");
+    //     ensure_wake();
+    //     if(flag_send_data){
+    //       flag_send_data = false;
+    //       jdy23_write(&hjdy, (uint8_t*)dma_buffer, BUFFER_SIZE* 4);
+    //   }
+    // }
+    // else{
+    //   ensure_sleep();
+    //   HAL_Delay(5);
+    //}
     // if (bufferA_ready)
     // {
     //   bufferA_ready = false;
@@ -342,7 +361,7 @@ static void MX_SPI1_Init(void)
   hspi1.Init.CLKPolarity = SPI_POLARITY_LOW;
   hspi1.Init.CLKPhase = SPI_PHASE_1EDGE;
   hspi1.Init.NSS = SPI_NSS_SOFT;
-  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_16;
+  hspi1.Init.BaudRatePrescaler = SPI_BAUDRATEPRESCALER_256;
   hspi1.Init.FirstBit = SPI_FIRSTBIT_MSB;
   hspi1.Init.TIMode = SPI_TIMODE_DISABLE;
   hspi1.Init.CRCCalculation = SPI_CRCCALCULATION_DISABLE;
@@ -479,8 +498,14 @@ static void MX_DMA_Init(void)
 
   /* DMA interrupt init */
   /* DMA1_Channel1_IRQn interrupt configuration */
-  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 0, 0);
+  HAL_NVIC_SetPriority(DMA1_Channel1_IRQn, 5, 0);
   HAL_NVIC_EnableIRQ(DMA1_Channel1_IRQn);
+  /* DMA1_Channel2_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel2_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel2_IRQn);
+  /* DMA1_Channel3_IRQn interrupt configuration */
+  HAL_NVIC_SetPriority(DMA1_Channel3_IRQn, 5, 0);
+  HAL_NVIC_EnableIRQ(DMA1_Channel3_IRQn);
 
 }
 
@@ -491,6 +516,7 @@ static void MX_DMA_Init(void)
   */
 static void MX_GPIO_Init(void)
 {
+  GPIO_InitTypeDef GPIO_InitStruct = {0};
   /* USER CODE BEGIN MX_GPIO_Init_1 */
 
   /* USER CODE END MX_GPIO_Init_1 */
@@ -499,10 +525,20 @@ static void MX_GPIO_Init(void)
   __HAL_RCC_GPIOD_CLK_ENABLE();
   __HAL_RCC_GPIOA_CLK_ENABLE();
 
+  /*Configure GPIO pin Output Level */
+  HAL_GPIO_WritePin(CS_SDCard_GPIO_Port, CS_SDCard_Pin, GPIO_PIN_RESET);
+
+  /*Configure GPIO pin : CS_SDCard_Pin */
+  GPIO_InitStruct.Pin = CS_SDCard_Pin;
+  GPIO_InitStruct.Mode = GPIO_MODE_OUTPUT_PP;
+  GPIO_InitStruct.Pull = GPIO_NOPULL;
+  GPIO_InitStruct.Speed = GPIO_SPEED_FREQ_LOW;
+  HAL_GPIO_Init(CS_SDCard_GPIO_Port, &GPIO_InitStruct);
+
   /* USER CODE BEGIN MX_GPIO_Init_2 */
 
   /* USER CODE END MX_GPIO_Init_2 */
-} 
+}
 
 /* USER CODE BEGIN 4 */
 void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
@@ -523,6 +559,51 @@ void HAL_UART_RxCpltCallback(UART_HandleTypeDef *huart)
     }
 }
 /* USER CODE END 4 */
+
+/* USER CODE BEGIN Header_StartDefaultTask */
+/**
+  * @brief  Function implementing the defaultTask thread.
+  * @param  argument: Not used
+  * @retval None
+  */
+/* USER CODE END Header_StartDefaultTask */
+void StartDefaultTask(void *argument)
+{
+  /* USER CODE BEGIN 5 */
+  /* Infinite loop */
+  printf("Started....\n");
+  for (int i = 0; i < 2*BUFFER_SIZE; i++){
+    dma_buffer[i] = 166;
+  }
+  /*
+  * Test SD card read/write
+  *
+  */
+  uint16_t read_buffer[2 * BUFFER_SIZE] = {0};
+  sd_card_config_t cfg = {
+    .sd_pins = {.hspi = &hspi1, .cs_port = GPIOA, .cs_pin = GPIO_PIN_4},
+    .mount_point = USERPath /* Mount at root of first drive */
+  };
+  const char *test_filename = "test.bin";
+  if (sd_card_init(&cfg) != SD_OK) {
+      printf("SD card initialization failed!\n");
+  }
+  else {
+      printf("SD card initialized successfully.\n");
+  }
+  // sd_card_write_file(test_filename, (const uint8_t*)dma_buffer, BUFFER_SIZE * 2);
+  // sd_card_read_file(test_filename, (uint8_t*)read_buffer, BUFFER_SIZE * 2);
+  // for (int i = 0; i < BUFFER_SIZE * 2; i++) { 
+  //     printf("%02X ", ((uint8_t*)read_buffer)[i]);
+  // }
+  // printf("\n");
+  // printf("SD card test completed.\n");
+  for(;;)
+  {
+    osDelay(1);
+  }
+  /* USER CODE END 5 */
+}
 
 /**
   * @brief  This function is executed in case of error occurrence.

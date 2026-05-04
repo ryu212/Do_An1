@@ -1,0 +1,10 @@
+Trong file syscall.c 
+đổi (CMSIS-RTOS v1)
+  osSemaphoreDef(SEM);
+  *sobj = osSemaphoreCreate(osSemaphore(SEM), 1);		
+  ret = (*sobj != NULL);
+thành (CMSIS-RTOS v2)
+    *sobj = osSemaphoreNew(1, 1, NULL);
+  ret = (*sobj != NULL);
+
+stack =  512 * 4 

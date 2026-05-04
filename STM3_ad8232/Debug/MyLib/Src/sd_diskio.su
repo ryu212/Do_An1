@@ -1,0 +1,6 @@
+../MyLib/Src/sd_diskio.c:19:16:sd_disk_status	16	static
+../MyLib/Src/sd_diskio.c:32:16:sd_disk_initialize	16	static
+../MyLib/Src/sd_diskio.c:49:16:sd_disk_read	40	static
+../MyLib/Src/sd_diskio.c:111:16:sd_disk_write	40	static
+../MyLib/Src/sd_diskio.c:180:16:sd_disk_ioctl	16	static
+../MyLib/Src/sd_diskio.c:227:14:get_fattime	4	static
